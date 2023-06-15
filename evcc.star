@@ -25,8 +25,7 @@ def main(config):
     tz = config.get("location", "Europe/Berlin")
     bucket = config.get("bucket") or "evcc"
 
-    homePower=[(1, 2),(1, 2)]
-    #homePower=get_homePower()
+    homePower=get_homePower()
 
     return render.Root(
         child = render.Plot(
@@ -46,14 +45,15 @@ def main(config):
 def get_homePower():
     # FIXME bucket configurable
     flux = 'from(bucket:"evcc")                        \
-        |> range(start: -1d)                                \ 
+        |> range(start: -1d)                                \
         |> filter(fn: (r) => r._measurement == "pvPower")   \
         |> group()                                          \
         |> aggregateWindow(every: 15m, fn: mean)            \
         |> fill(value: 0.0)                                 \
         |> keep(columns: ["_time", "_value"])'
 
-    return get_datatouples(flux)  
+    return get_datatouples(flux)
+
 
 def get_datatouples(query):
 
