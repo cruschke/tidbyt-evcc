@@ -26,18 +26,17 @@ def main(config):
     bucket = config.get("bucket") or "evcc"
 
     homePower=get_homePower()
+    pvPower=get_pvPower()
+
+
 
     return render.Root(
-        child = render.Plot(
-            data = homePower,
-            width = 64,
-            height = 32,
-            color = "#0f0",
-            color_inverted = "#f00",
-            x_lim = (0, 96), # FIXME 96
-            y_lim = (0, 5000),
-            fill = True,
-            ),
+        render.Stack(
+            children=[
+                render.Plot(data = pvPower,width = 64,height = 32,color = "#0f0",color_inverted = "#f00",x_lim = (0, 96), y_lim = (0, 5000),fill = False,),
+                render.Plot(data = homePower,width = 64,height = 32,color = "#f00",color_inverted = "#f00",x_lim = (0, 96),y_lim = (0, 5000),fill = False,),   
+            ],   
+        )          
     )
 
 #        
@@ -48,12 +47,22 @@ def get_homePower():
         |> range(start: -1d)                                \
         |> filter(fn: (r) => r._measurement == "pvPower")   \
         |> group()                                          \
-        |> aggregateWindow(every: 15m, fn: mean)            \
+        |> aggregateWindow(every: 15m, fn: mean)           \
         |> fill(value: 0.0)                                 \
         |> keep(columns: ["_time", "_value"])'
 
     return get_datatouples(flux)
 
+def get_pvPower():
+    flux="from(bucket:\"evcc\")                              \
+        |> range(start: -1d)                                \
+        |> fill(value: 0.0)                                 \
+        |> filter(fn: (r) => r._measurement == \"homePower\") \
+        |> aggregateWindow(every: 15m, fn: mean)           \
+        |> fill(value: 0.0)                                 \
+        |> keep(columns: [\"_time\", \"_value\"])"
+
+    return get_datatouples(flux)    
 
 def get_datatouples(query):
 
@@ -66,7 +75,8 @@ def get_datatouples(query):
         },
         json_body = {"query": query, "type": "flux"},
     )
-        
+
+    print(rep.status_code)    
     print(rep.body())
         
     if rep.status_code != 200:
@@ -78,10 +88,10 @@ def get_datatouples(query):
     line_number = 0
     for row in data[1:]:
         value = row[-1]
-        #print(value)
+        print(value)
         result.append((line_number, float(value)))
         line_number += 1 
-    #print(result)   
+    print(result)   
     return result
 
 def get_schema():
