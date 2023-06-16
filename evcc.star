@@ -17,16 +17,29 @@ load("time.star", "time")
 
 INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
-tz = "Europe/Berlin"
+DEFAULT_BUCKET="evcc"
+
+DEFAULT_LOCATION = json.encode({
+	"lat": "52.52136203907116",
+	"lng": "13.413308033057413",
+	"description": "Berlin, Berlin, Germany",
+	"locality": "Weltzeituhr Alexanderolatz",
+	"place_id": "ChIJmbztRB9OqEcRGBgdJ67pifE",
+	"timezone": "Europe/Berlin"
+})
+
 
 def main(config):
     api_key = config.str("api_key") or INFLUXDB_TOKEN
-    site_id = config.str("site_id")
-    tz = config.get("location", "Europe/Berlin")
-    bucket = config.get("bucket") or "evcc"
+    bucket = config.get("bucket") or DEFAULT_BUCKET
 
-    homePower = get_homePower()
-    pvPower = get_pvPower()
+    location = config.get("location", DEFAULT_LOCATION)
+    loc = json.decode(location)
+    timezone = loc["timezone"]
+
+    #print("timezone=%s" % timezone)
+    homePower = get_homePower(bucket,timezone)
+    pvPower = get_pvPower(bucket,timezone)
 
     return render.Root(
         render.Stack(
@@ -39,28 +52,34 @@ def main(config):
 
 #
 
-def get_homePower():
-    # FIXME bucket configurable
-    flux = 'from(bucket:"evcc")                        \
-        |> range(start: -1d)                                \
-        |> filter(fn: (r) => r._measurement == "pvPower")   \
-        |> group()                                          \
-        |> aggregateWindow(every: 15m, fn: mean)           \
-        |> fill(value: 0.0)                                 \
+def get_homePower(bucket,timezone):
+    fluxql = '                                                      \
+    import "timezone"                                               \
+    option location = timezone.location(name: "' + timezone + '")   \
+    from(bucket:"' + bucket + '")                                   \
+        |> range(start: today())                                    \
+        |> filter(fn: (r) => r._measurement == "pvPower")           \
+        |> group()                                                  \
+        |> aggregateWindow(every: 15m, fn: mean)                    \
+        |> fill(value: 0.0)                                         \
         |> keep(columns: ["_time", "_value"])'
 
-    return get_datatouples(flux)
+    print(fluxql)
+    return get_datatouples(fluxql)
 
-def get_pvPower():
-    flux = "from(bucket:\"evcc\")                              \
-        |> range(start: -1d)                                \
-        |> fill(value: 0.0)                                 \
-        |> filter(fn: (r) => r._measurement == \"homePower\") \
-        |> aggregateWindow(every: 15m, fn: mean)           \
-        |> fill(value: 0.0)                                 \
-        |> keep(columns: [\"_time\", \"_value\"])"
+def get_pvPower(bucket,timezone):
+    fluxql = '                                                      \
+    import "timezone"                                               \
+    option location = timezone.location(name: "' + timezone + '")   \
+    from(bucket:"' + bucket + '")                                   \
+        |> range(start: today())                                    \
+        |> fill(value: 0.0)                                         \
+        |> filter(fn: (r) => r._measurement == "homePower")         \
+        |> aggregateWindow(every: 15m, fn: mean)                    \
+        |> fill(value: 0.0)                                         \
+        |> keep(columns: ["_time", "_value"])'
 
-    return get_datatouples(flux)
+    return get_datatouples(fluxql)
 
 def get_datatouples(query):
     rep = http.post(
@@ -95,7 +114,7 @@ def csv2touples(csvinput):
         result.append((line_number, float(value)))
         line_number += 1
 
-    print(result)
+    #print(result)
     return result
 
 def get_schema():
