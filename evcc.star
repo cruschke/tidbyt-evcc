@@ -81,7 +81,11 @@ def get_datatouples(query):
         print("%s Error, could not get data for %s!!!!" % (rep.status_code))
         return None
 
-    data = csv.read_all(rep.body())
+    return csv2touples(rep.body())
+
+def csv2touples(csvinput):
+
+    data = csv.read_all(csvinput)
     result = []
     line_number = 0
     for row in data[1:]:
@@ -91,7 +95,7 @@ def get_datatouples(query):
         result.append((line_number, float(value)))
         line_number += 1
 
-    #print(result)
+    print(result)
     return result
 
 def get_schema():
