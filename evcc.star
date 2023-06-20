@@ -23,7 +23,7 @@ DEFAULT_LOCATION = json.encode({
 	"lat": "52.52136203907116",
 	"lng": "13.413308033057413",
 	"description": "Berlin, Berlin, Germany",
-	"locality": "Weltzeituhr Alexanderolatz",
+	"locality": "Weltzeituhr Alexanderlatz",
 	"place_id": "ChIJmbztRB9OqEcRGBgdJ67pifE",
 	"timezone": "Europe/Berlin"
 })
@@ -38,8 +38,12 @@ def main(config):
     timezone = loc["timezone"]
 
     #print("timezone=%s" % timezone)
-    homePower = get_homePower(bucket,timezone)
-    pvPower = get_pvPower(bucket,timezone)
+    homePower = get_homePower_series(bucket,timezone)
+    pvPower = get_pvPower_series(bucket,timezone)
+    pvPower_max= get_pvPower_max(bucket,timezone)
+    
+    print("pvPower_max=%s" % pvPower_max)
+
 
     return render.Root(
         render.Stack(
@@ -52,7 +56,7 @@ def main(config):
 
 #
 
-def get_homePower(bucket,timezone):
+def get_homePower_series(bucket,timezone):
     fluxql = '                                                      \
     import "timezone"                                               \
     option location = timezone.location(name: "' + timezone + '")   \
@@ -67,7 +71,7 @@ def get_homePower(bucket,timezone):
     print(fluxql)
     return get_datatouples(fluxql)
 
-def get_pvPower(bucket,timezone):
+def get_pvPower_series(bucket,timezone):
     fluxql = '                                                      \
     import "timezone"                                               \
     option location = timezone.location(name: "' + timezone + '")   \
@@ -76,12 +80,27 @@ def get_pvPower(bucket,timezone):
         |> fill(value: 0.0)                                         \
         |> filter(fn: (r) => r._measurement == "homePower")         \
         |> aggregateWindow(every: 15m, fn: mean)                    \
-        |> fill(value: 0.0)                                         \
         |> keep(columns: ["_time", "_value"])'
 
     return get_datatouples(fluxql)
 
-def get_datatouples(query):
+def get_pvPower_max(bucket,timezone):
+    fluxql = '                                                      \
+    import "timezone"                                               \
+    option location = timezone.location(name: "' + timezone + '")   \
+    from(bucket:"' + bucket + '")                                   \
+        |> range(start: today())                                    \
+        |> filter(fn: (r) => r._measurement == "pvPower")         \
+        |> group()                                                  \
+        |> max()                                                    \
+        |> keep(columns: ["_value"])' 
+    data = csv.read_all(get_fluxdata(fluxql))    
+    #,result,table,_value
+    #,_result,0,4520
+
+    return data[1][3] # not the most elegant CSV parsing
+    
+def get_fluxdata(query):
     rep = http.post(
         INFLUXDB_HOST,
         headers = {
@@ -100,7 +119,12 @@ def get_datatouples(query):
         print("%s Error, could not get data for %s!!!!" % (rep.status_code))
         return None
 
-    return csv2touples(rep.body())
+    return rep.body()
+
+def get_datatouples(query):
+
+    result=get_fluxdata(query)
+    return csv2touples(result)
 
 def csv2touples(csvinput):
 
@@ -130,7 +154,7 @@ def get_schema():
             schema.Text(
                 id = "bucket",
                 name = "bucket name",
-                desc = "The name of the InfluxDB bucket, what is configured in evcc.yaml as parameter \"database\". Default \"evcc\"",
+                desc = "The name of the InfluxDB bucket, default \"evcc\"",
                 icon = "database",
                 default = "evcc",
             ),
