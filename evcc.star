@@ -19,6 +19,8 @@ INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
 DEFAULT_BUCKET="evcc"
 
+FONT="tom-thumb"
+
 DEFAULT_LOCATION = json.encode({
 	"lat": "52.52136203907116",
 	"lng": "13.413308033057413",
@@ -40,28 +42,33 @@ def main(config):
     #print("timezone=%s" % timezone)
     homePower = get_homePower_series(bucket,timezone)
     pvPower = get_pvPower_series(bucket,timezone)
+
     pvPower_max= get_pvPower_max(bucket,timezone)
+    homePower_max= get_homePower_max(bucket,timezone)
     
     print("pvPower_max=%s" % pvPower_max)
+    print("homePower_max=%s" % homePower_max)
 
+    render_graph=render.Stack(
+        children = [
+            render.Plot(data = pvPower, width = 64, height = 32, color = "#0f0", color_inverted = "#f00", x_lim = (0, 64), y_lim = (0, 5000), fill = False),
+            render.Plot(data = homePower, width = 64, height = 32, color = "#f00", color_inverted = "#f00", x_lim = (0, 64), y_lim = (0, 5000), fill = False),
+    ])
+    render_max = render.Column(children = [
+        render.Text(pvPower_max, font = FONT, color = "#0f0"),
+        render.Text(homePower_max, font = FONT, color = "#f00"),
+    ])    
+    return render.Root(child = render.Stack(children = [render_max, render_graph]))
 
-    return render.Root(
-        render.Stack(
-            children = [
-                render.Plot(data = pvPower, width = 64, height = 32, color = "#f00", color_inverted = "#f00", x_lim = (0, 96), y_lim = (0, 5000), fill = False),
-                render.Plot(data = homePower, width = 64, height = 32, color = "#0f0", color_inverted = "#f00", x_lim = (0, 96), y_lim = (0, 5000), fill = False),
-            ],
-        ),
-    )
 
 #
 
-def get_homePower_series(bucket,timezone):
+def get_pvPower_series(bucket,timezone):
     fluxql = '                                                      \
     import "timezone"                                               \
     option location = timezone.location(name: "' + timezone + '")   \
     from(bucket:"' + bucket + '")                                   \
-        |> range(start: today())                                    \
+        |> range(start: -16h)                                    \
         |> filter(fn: (r) => r._measurement == "pvPower")           \
         |> group()                                                  \
         |> aggregateWindow(every: 15m, fn: mean)                    \
@@ -71,12 +78,12 @@ def get_homePower_series(bucket,timezone):
     print(fluxql)
     return get_datatouples(fluxql)
 
-def get_pvPower_series(bucket,timezone):
+def get_homePower_series(bucket,timezone):
     fluxql = '                                                      \
     import "timezone"                                               \
     option location = timezone.location(name: "' + timezone + '")   \
     from(bucket:"' + bucket + '")                                   \
-        |> range(start: today())                                    \
+        |> range(start: -16h)                                    \
         |> fill(value: 0.0)                                         \
         |> filter(fn: (r) => r._measurement == "homePower")         \
         |> aggregateWindow(every: 15m, fn: mean)                    \
@@ -93,12 +100,29 @@ def get_pvPower_max(bucket,timezone):
         |> filter(fn: (r) => r._measurement == "pvPower")         \
         |> group()                                                  \
         |> max()                                                    \
+        |> toInt() \
         |> keep(columns: ["_value"])' 
     data = csv.read_all(get_fluxdata(fluxql))    
     #,result,table,_value
     #,_result,0,4520
 
     return data[1][3] # not the most elegant CSV parsing
+
+def get_homePower_max(bucket,timezone):
+    fluxql = '                                                      \
+    import "timezone"                                               \
+    option location = timezone.location(name: "' + timezone + '")   \
+    from(bucket:"' + bucket + '")                                   \
+        |> range(start: today())                                    \
+        |> filter(fn: (r) => r._measurement == "homePower")         \
+        |> max()                                                    \
+        |> toInt() \
+        |> keep(columns: ["_value"])' 
+    data = csv.read_all(get_fluxdata(fluxql))    
+    #,result,table,_value
+    #,_result,0,4520
+
+    return data[1][3] # not the most elegant CSV parsing    
     
 def get_fluxdata(query):
     rep = http.post(
