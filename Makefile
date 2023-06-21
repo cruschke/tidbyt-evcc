@@ -1,10 +1,12 @@
 .PHONY: render push clean
 
+DEVICEID := $(shell pixlet devices  | cut -f1 -d" ")
+
 all: render push
 
 render:
 	pixlet render evcc.star
 push:
-	pixlet push namely-impeccable-vivacious-pitta-02f evcc.webp
+	pixlet push $(DEVICEID) evcc.webp
 clean:
 	rm -f evcc.webp
