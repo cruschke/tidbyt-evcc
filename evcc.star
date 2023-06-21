@@ -21,25 +21,22 @@ DEFAULT_BUCKET="evcc"
 
 FONT="tom-thumb"
 
-DEFAULT_LOCATION = json.encode({
-	"lat": "52.52136203907116",
-	"lng": "13.413308033057413",
-	"description": "Berlin, Berlin, Germany",
-	"locality": "Weltzeituhr Alexanderlatz",
-	"place_id": "ChIJmbztRB9OqEcRGBgdJ67pifE",
-	"timezone": "Europe/Berlin"
-})
-
+DEFAULT_LOCATION = {
+    "lat": 52.52136203907116,
+    "lng": 13.413308033057413,
+    "locality": "Weltzeituhr Alexanderlatz",
+}
+DEFAULT_TIMEZONE = "Europe/Berlin"
 
 def main(config):
     api_key = config.str("api_key") or INFLUXDB_TOKEN
     bucket = config.get("bucket") or DEFAULT_BUCKET
 
-    location = config.get("location", DEFAULT_LOCATION)
-    loc = json.decode(location)
-    timezone = loc["timezone"]
+    location = config.get("location")
+    loc = json.decode(location) if location else DEFAULT_LOCATION
+    timezone = loc.get("timezone", DEFAULT_TIMEZONE)
 
-    #print("timezone=%s" % timezone)
+    print("timezone=%s" % timezone)
     homePower = get_homePower_series(bucket,timezone)
     pvPower = get_pvPower_series(bucket,timezone)
 
