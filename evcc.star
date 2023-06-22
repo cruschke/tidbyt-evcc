@@ -36,15 +36,15 @@ def main(config):
     loc = json.decode(location) if location else DEFAULT_LOCATION
     timezone = loc.get("timezone", DEFAULT_TIMEZONE)
 
-    print("timezone=%s" % timezone)
+    #print("timezone=%s" % timezone)
     homePower = get_homePower_series(bucket,timezone)
     pvPower = get_pvPower_series(bucket,timezone)
 
     pvPower_max= get_pvPower_max(bucket,timezone)
     homePower_max= get_homePower_max(bucket,timezone)
     
-    print("pvPower_max=%s" % pvPower_max)
-    print("homePower_max=%s" % homePower_max)
+    #print("pvPower_max=%s" % pvPower_max)
+    #print("homePower_max=%s" % homePower_max)
 
     render_graph=render.Stack(
         children = [
@@ -56,9 +56,6 @@ def main(config):
         render.Text(homePower_max, font = FONT, color = "#f00"),
     ])    
     return render.Root(child = render.Stack(children = [render_max, render_graph]))
-
-
-#
 
 def get_pvPower_series(bucket,timezone):
     fluxql = '                                                      \
@@ -72,7 +69,6 @@ def get_pvPower_series(bucket,timezone):
         |> fill(value: 0.0)                                         \
         |> keep(columns: ["_time", "_value"])'
 
-    print(fluxql)
     return get_datatouples(fluxql)
 
 def get_homePower_series(bucket,timezone):
@@ -133,7 +129,7 @@ def get_fluxdata(query):
     )
 
     #print(rep.status_code)
-    print(rep.body())
+    #print(rep.body())
 
     # TODO Error handling
     if rep.status_code != 200:
