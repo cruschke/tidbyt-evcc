@@ -18,7 +18,9 @@ load("time.star", "time")
 INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
 DEFAULT_BUCKET = "evcc"
-yscale = 5000
+TTL_SERIES = 900  # how often the time series for pvPower and homePower are being refreshed
+TTL_MAXVALUE = 900  # how often the max values are being refreshed
+TTL_LATEST = 60  # the TTL for up2date info
 
 FONT = "tom-thumb"
 
@@ -38,18 +40,18 @@ def main(config):
     timezone = loc.get("timezone", DEFAULT_TIMEZONE)
 
     # some FluxQL query parameters that every single query needs
-    flux_defaults='                                                     \
+    flux_defaults = '                                                     \
         import "timezone"                                               \
         option location = timezone.location(name: "' + timezone + '")   \
         from(bucket:"' + bucket + '")'
 
     #print("timezone=%s" % timezone)
-    homePower = get_homePower_series(flux_defaults)
-    pvPower = get_pvPower_series(flux_defaults)
-    consumption = subtract_lists(pvPower,homePower)
+    homePower = get_homePower_series(flux_defaults, api_key, TTL_SERIES)
+    pvPower = get_pvPower_series(flux_defaults, api_key, TTL_SERIES)
+    consumption = subtract_lists(pvPower, homePower)
 
-    pvPower_max = get_pvPower_max(flux_defaults)
-    homePower_max = get_homePower_max(flux_defaults)
+    pvPower_max = get_pvPower_max(flux_defaults, api_key, TTL_MAXVALUE)
+    homePower_max = get_homePower_max(flux_defaults, api_key, TTL_MAXVALUE)
 
     # str(type(color)) == "string"
     #print("pvPower_max=%s" % pvPower_max)
@@ -58,7 +60,6 @@ def main(config):
     render_graph = render.Stack(
         children = [
             render.Plot(data = consumption, width = 64, height = 32, color = "#0f0", color_inverted = "#f00", fill = True),
-
         ],
     )
     render_max = render.Column(children = [
@@ -67,52 +68,37 @@ def main(config):
     ])
     return render.Root(child = render.Stack(children = [render_max, render_graph]))
 
-def get_pvPower_series(defaults):
+def get_pvPower_series(defaults, api_key, ttl):
     fluxql = defaults + ' \
-        |> range(start: -16h)                                    \
+        |> range(start: -1d)                                    \
         |> filter(fn: (r) => r._measurement == "pvPower")           \
         |> group()                                                  \
         |> aggregateWindow(every: 15m, fn: mean)                    \
         |> fill(value: 0.0)                                         \
         |> keep(columns: ["_time", "_value"])'
 
-    return get_datatouples(fluxql)
+    return get_datatouples(fluxql, api_key, ttl)
 
-def get_homePower_series(defaults):
+def get_homePower_series(defaults, api_key, ttl):
     fluxql = defaults + ' \
-        |> range(start: -16h)                                    \
+        |> range(start: -1d)                                    \
         |> filter(fn: (r) => r._measurement == "homePower")         \
         |> aggregateWindow(every: 15m, fn: mean)                    \
         |> fill(value: 0.0)                                         \
         |> keep(columns: ["_time", "_value"])'
-    #print ("query=" + fluxql)
-    return get_datatouples(fluxql)
 
-def get_pvPower_max (defaults):
+    #print ("query=" + fluxql)
+    return get_datatouples(fluxql, api_key, ttl)
+
+def get_pvPower_max(defaults, api_key, ttl):
     fluxql = defaults + ' \
-        |> range(start: -16h)                                    \
+        |> range(start: -1d)                                    \
         |> filter(fn: (r) => r._measurement == "pvPower")         \
         |> group()                                                  \
         |> max()                                                    \
         |> toInt() \
         |> keep(columns: ["_value"])'
-    data = csv.read_all(get_fluxdata(fluxql))
-    #,result,table,_value
-    #,_result,0,4520
-
-    if len(data) > 0:
-        return data[1][3]  # not the most elegant CSV parsing
-    else:
-        return "0000"    
-
-def get_homePower_max(defaults):
-    fluxql = defaults + ' \
-        |> range(start: -16h)                                    \
-        |> filter(fn: (r) => r._measurement == "homePower")         \
-        |> max()                                                    \
-        |> toInt() \
-        |> keep(columns: ["_value"])'
-    data = csv.read_all(get_fluxdata(fluxql))
+    data = csv.read_all(get_fluxdata(fluxql, api_key, ttl))
     #,result,table,_value
     #,_result,0,4520
 
@@ -121,11 +107,36 @@ def get_homePower_max(defaults):
     else:
         return "0000"
 
-def get_fluxdata(query):
+def get_homePower_max(defaults, api_key, ttl):
+    fluxql = defaults + ' \
+        |> range(start: -1d)                                    \
+        |> filter(fn: (r) => r._measurement == "homePower")         \
+        |> max()                                                    \
+        |> toInt() \
+        |> keep(columns: ["_value"])'
+    data = csv.read_all(get_fluxdata(fluxql, api_key, ttl))
+    #,result,table,_value
+    #,_result,0,4520
+
+    if len(data) > 0:
+        return data[1][3]  # not the most elegant CSV parsing
+    else:
+        return "0000"
+
+def get_fluxdata(query, api_key, ttl):
+    key = base64.encode(api_key + query)
+    data = cache.get(key)
+
+    if data != None:  # the cache key does exist and has not expired
+        #print("Cache HIT for %s" % query)
+        return base64.decode(data)
+
+    #print("Cache MISS for %s" % query)
+
     rep = http.post(
         INFLUXDB_HOST,
         headers = {
-            "Authorization": "Token " + INFLUXDB_TOKEN,
+            "Authorization": "Token " + api_key,
             "Accept": "application/json",
             "Content-type": "application/json",
         },
@@ -135,15 +146,15 @@ def get_fluxdata(query):
     #print(rep.status_code)
     #print(rep.body())
 
-    # TODO Error handling
     if rep.status_code != 200:
         fail("InfluxDB API request failed with status {}".format(rep.status_code))
         return None
+    cache.set(key, base64.encode(rep.body()), ttl_seconds = ttl)
 
     return rep.body()
 
-def get_datatouples(query):
-    result = get_fluxdata(query)
+def get_datatouples(query, api_key, ttl):
+    result = get_fluxdata(query, api_key, ttl)
     return csv2touples(result)
 
 def csv2touples(csvinput):
