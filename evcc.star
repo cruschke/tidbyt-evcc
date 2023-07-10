@@ -63,8 +63,8 @@ def main(config):
         ],
     )
     render_max = render.Column(children = [
-        render.Text(pvPower_max, font = FONT, color = "#0f0"),
-        render.Text(homePower_max, font = FONT, color = "#f00"),
+        #render.Text(pvPower_max, font = FONT, color = "#0f0"),
+        #render.Text(homePower_max, font = FONT, color = "#f00"),
     ])
     return render.Root(child = render.Stack(children = [render_max, render_graph]))
 
