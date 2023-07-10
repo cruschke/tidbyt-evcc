@@ -45,10 +45,7 @@ def main(config):
         option location = timezone.location(name: "' + timezone + '")   \
         from(bucket:"' + bucket + '")'
 
-    #print("timezone=%s" % timezone)
-    homePower = get_homePower_series(flux_defaults, api_key, TTL_SERIES)
-    pvPower = get_pvPower_series(flux_defaults, api_key, TTL_SERIES)
-    consumption = subtract_lists(pvPower, homePower)
+    consumption=get_gridPower_series(flux_defaults, api_key, TTL_SERIES)
 
     pvPower_max = get_pvPower_max(flux_defaults, api_key, TTL_MAXVALUE)
     homePower_max = get_homePower_max(flux_defaults, api_key, TTL_MAXVALUE)
@@ -68,27 +65,18 @@ def main(config):
     ])
     return render.Root(child = render.Stack(children = [render_max, render_graph]))
 
-def get_pvPower_series(defaults, api_key, ttl):
+def get_gridPower_series(defaults, api_key, ttl):
     fluxql = defaults + ' \
         |> range(start: -1d)                                    \
-        |> filter(fn: (r) => r._measurement == "pvPower")           \
-        |> group()                                                  \
+        |> filter(fn: (r) => r._measurement == "gridPower")         \
         |> aggregateWindow(every: 15m, fn: mean)                    \
         |> fill(value: 0.0)                                         \
-        |> keep(columns: ["_time", "_value"])'
-
-    return get_datatouples(fluxql, api_key, ttl)
-
-def get_homePower_series(defaults, api_key, ttl):
-    fluxql = defaults + ' \
-        |> range(start: -1d)                                    \
-        |> filter(fn: (r) => r._measurement == "homePower")         \
-        |> aggregateWindow(every: 15m, fn: mean)                    \
-        |> fill(value: 0.0)                                         \
+        |> map(fn: (r) => ({r with _value: (float(v: r._value) * -1.0) })) \
         |> keep(columns: ["_time", "_value"])'
 
     #print ("query=" + fluxql)
     return get_datatouples(fluxql, api_key, ttl)
+
 
 def get_pvPower_max(defaults, api_key, ttl):
     fluxql = defaults + ' \
