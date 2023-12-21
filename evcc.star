@@ -29,8 +29,6 @@ TTL_FOR_LAST     = 60  # the TTL for up2date info
 TTL_FOR_MAX      = 900  # how often the max values are being refreshed
 TTL_FOR_SERIES   = 900  # how often the time series for pvPower and homePower are being refreshed
 
-
-
 def main(config):
     api_key = config.str("api_key") or INFLUXDB_TOKEN
     bucket = config.get("bucket") or DEFAULT_BUCKET
@@ -47,6 +45,7 @@ def main(config):
 
     consumption = get_gridPower_series(flux_defaults, api_key)
 
+    phasesActive_last= get_last_value("phasesActive", flux_defaults, api_key) 
     chargePower_last = get_last_value("chargePower", flux_defaults, api_key) 
     chargePower_max  = get_max_value("chargePower", flux_defaults, api_key) 
     homePower_last   = get_last_value("homePower", flux_defaults, api_key)
@@ -54,8 +53,8 @@ def main(config):
     pvPower_last     = get_last_value("pvPower",flux_defaults, api_key) 
     pvPower_max      = get_max_value("pvPower", flux_defaults, api_key)
 
-
     # str(type(color)) == "string"
+    print("phasesActive_last=%s" % phasesActive_last)
     print("chargePower_last=%s" % chargePower_last)
     print("chargePower_max=%s" % chargePower_max)
     print("homePower_last=%s" % homePower_last)
@@ -69,8 +68,9 @@ def main(config):
         ],
     )
     render_max = render.Column(children = [
-        render.Text(pvPower_max, font = FONT, color = "#0f0"),
-        render.Text(homePower_max, font = FONT, color = "#f00"),
+        render.Text(chargePower_last, font = FONT, color = "#f00"),
+        render.Text(pvPower_last, font = FONT, color = "#0f0"),
+        render.Text(homePower_last, font = FONT, color = "#f00"),
     ])
     return render.Root(child = render.Stack(children = [render_max, render_graph]))
 
@@ -114,7 +114,6 @@ def get_last_value(measurement, defaults, api_key):
     
     data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_LAST))
     return data[1][3] if len(data) > 0 else "0000"
-
 
 def readInfluxDB(query, api_key, ttl):
     key = base64.encode(api_key + query)
