@@ -15,21 +15,21 @@ load("render.star", "render")
 load("schema.star", "schema")
 load("time.star", "time")
 
-INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
-INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
-DEFAULT_BUCKET = "evcc"
-TTL_SERIES = 900  # how often the time series for pvPower and homePower are being refreshed
-TTL_MAXVALUE = 900  # how often the max values are being refreshed
-TTL_LATEST = 60  # the TTL for up2date info
-
-FONT = "tom-thumb"
-
+DEFAULT_BUCKET   = "evcc"
 DEFAULT_LOCATION = {
     "lat": 52.52136203907116,
     "lng": 13.413308033057413,
     "locality": "Weltzeituhr Alexanderlatz",
 }
 DEFAULT_TIMEZONE = "Europe/Berlin"
+FONT             = "tom-thumb"
+INFLUXDB_HOST    = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
+INFLUXDB_TOKEN   = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
+TTL_FOR_LAST     = 60  # the TTL for up2date info
+TTL_FOR_MAX      = 900  # how often the max values are being refreshed
+TTL_FOR_SERIES   = 900  # how often the time series for pvPower and homePower are being refreshed
+
+
 
 def main(config):
     api_key = config.str("api_key") or INFLUXDB_TOKEN
@@ -45,14 +45,23 @@ def main(config):
         option location = timezone.location(name: "' + timezone + '")   \
         from(bucket:"' + bucket + '")'
 
-    consumption=get_gridPower_series(flux_defaults, api_key, TTL_SERIES)
+    consumption = get_gridPower_series(flux_defaults, api_key)
 
-    pvPower_max = get_pvPower_max(flux_defaults, api_key, TTL_MAXVALUE)
-    homePower_max = get_homePower_max(flux_defaults, api_key, TTL_MAXVALUE)
+    chargePower_last = get_last_value("chargePower", flux_defaults, api_key) 
+    chargePower_max  = get_max_value("chargePower", flux_defaults, api_key) 
+    homePower_last   = get_last_value("homePower", flux_defaults, api_key)
+    homePower_max    = get_max_value("homePower", flux_defaults, api_key)
+    pvPower_last     = get_last_value("pvPower",flux_defaults, api_key) 
+    pvPower_max      = get_max_value("pvPower", flux_defaults, api_key)
+
 
     # str(type(color)) == "string"
-    #print("pvPower_max=%s" % pvPower_max)
-    #print("homePower_max=%s" % homePower_max)
+    print("chargePower_last=%s" % chargePower_last)
+    print("chargePower_max=%s" % chargePower_max)
+    print("homePower_last=%s" % homePower_last)
+    print("homePower_max=%s" % homePower_max)
+    print("pvPower_last=%s" % pvPower_last)
+    print("pvPower_max=%s" % pvPower_max)
 
     render_graph = render.Stack(
         children = [
@@ -60,14 +69,19 @@ def main(config):
         ],
     )
     render_max = render.Column(children = [
-        #render.Text(pvPower_max, font = FONT, color = "#0f0"),
-        #render.Text(homePower_max, font = FONT, color = "#f00"),
+        render.Text(pvPower_max, font = FONT, color = "#0f0"),
+        render.Text(homePower_max, font = FONT, color = "#f00"),
     ])
     return render.Root(child = render.Stack(children = [render_max, render_graph]))
 
-def get_gridPower_series(defaults, api_key, ttl):
+# https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
+# grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
+# inverted the series for more natural display of the data series
+# multiply by -1 to make it display logically correct in Plot
+
+def get_gridPower_series(defaults, api_key):
     fluxql = defaults + ' \
-        |> range(start: -1d)                                    \
+        |> range(start: -12h)                                    \
         |> filter(fn: (r) => r._measurement == "gridPower")         \
         |> aggregateWindow(every: 15m, fn: mean)                    \
         |> fill(value: 0.0)                                         \
@@ -75,43 +89,34 @@ def get_gridPower_series(defaults, api_key, ttl):
         |> keep(columns: ["_time", "_value"])'
 
     #print ("query=" + fluxql)
-    return get_datatouples(fluxql, api_key, ttl)
+    return get_datatouples(fluxql, api_key, TTL_FOR_SERIES)
 
-
-def get_pvPower_max(defaults, api_key, ttl):
+def get_max_value(measurement, defaults, api_key):
     fluxql = defaults + ' \
-        |> range(start: -1d)                                    \
-        |> filter(fn: (r) => r._measurement == "pvPower")         \
-        |> group()                                                  \
-        |> max()                                                    \
+        |> range(start: -1d) \
+        |> filter(fn: (r) => r._measurement == "' + measurement + '") \
+        |> group() \
+        |> max() \
         |> toInt() \
         |> keep(columns: ["_value"])'
-    data = csv.read_all(get_fluxdata(fluxql, api_key, ttl))
-    #,result,table,_value
-    #,_result,0,4520
+    
+    data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_MAX))
+    return data[1][3] if len(data) > 0 else "0000"
 
-    if len(data) > 0:
-        return data[1][3]  # not the most elegant CSV parsing
-    else:
-        return "0000"
-
-def get_homePower_max(defaults, api_key, ttl):
+def get_last_value(measurement, defaults, api_key):
     fluxql = defaults + ' \
-        |> range(start: -1d)                                    \
-        |> filter(fn: (r) => r._measurement == "homePower")         \
-        |> max()                                                    \
+        |> range(start: -1m) \
+        |> filter(fn: (r) => r._measurement == "' + measurement + '") \
+        |> group() \
+        |> last() \
         |> toInt() \
         |> keep(columns: ["_value"])'
-    data = csv.read_all(get_fluxdata(fluxql, api_key, ttl))
-    #,result,table,_value
-    #,_result,0,4520
+    
+    data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_LAST))
+    return data[1][3] if len(data) > 0 else "0000"
 
-    if len(data) > 0:
-        return data[1][3]  # not the most elegant CSV parsing
-    else:
-        return "0000"
 
-def get_fluxdata(query, api_key, ttl):
+def readInfluxDB(query, api_key, ttl):
     key = base64.encode(api_key + query)
     data = cache.get(key)
 
@@ -142,9 +147,10 @@ def get_fluxdata(query, api_key, ttl):
     return rep.body()
 
 def get_datatouples(query, api_key, ttl):
-    result = get_fluxdata(query, api_key, ttl)
+    result = readInfluxDB(query, api_key, ttl)
     return csv2touples(result)
 
+# InfluxDB returns time series as CSV, we want touples instead
 def csv2touples(csvinput):
     data = csv.read_all(csvinput)
     result = []
@@ -157,15 +163,6 @@ def csv2touples(csvinput):
         line_number += 1
 
     #print(result)
-    return result
-
-def subtract_lists(list1, list2):
-    result = []
-    for tup1, tup2 in zip(list1, list2):
-        id1, value1 = tup1
-        id2, value2 = tup2
-        subtracted_value = value1 - value2
-        result.append((id1, subtracted_value))
     return result
 
 def get_schema():
