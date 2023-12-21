@@ -15,29 +15,29 @@ load("render.star", "render")
 load("schema.star", "schema")
 load("time.star", "time")
 
-DEFAULT_BUCKET   = "evcc"
+DEFAULT_BUCKET = "evcc"
 DEFAULT_LOCATION = {
     "lat": 52.52136203907116,
     "lng": 13.413308033057413,
     "locality": "Weltzeituhr Alexanderlatz",
 }
 DEFAULT_TIMEZONE = "Europe/Berlin"
-FONT             = "tom-thumb"
-INFLUXDB_HOST    = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
-INFLUXDB_TOKEN   = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
-TTL_FOR_LAST     = 60  # the TTL for up2date info
-TTL_FOR_MAX      = 900  # how often the max values are being refreshed
-TTL_FOR_SERIES   = 900  # how often the time series for pvPower and homePower are being refreshed
+FONT = "tom-thumb"
+INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
+INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
+TTL_FOR_LAST = 60  # the TTL for up2date info
+TTL_FOR_MAX = 900  # how often the max values are being refreshed
+TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are being refreshed
 
 # COLOR DEFINITIONS
-BS_GRAY_BRIGHT="#F3F3F7"
-BS_GRAY_DARK="#28293E"
-BS_GRAY_DEEP="#010322"
-BS_GRAY_LIGHT="#B5B6C3"
-BS_GRAY_MEDIUM="#93949E"
-EVCC_DARK_YELLOW="#BBB400"
-EVCC_SELF="#0FDE41"
-EVCC_YELLOW="#FAF000"
+BS_GRAY_BRIGHT = "#F3F3F7"
+BS_GRAY_DARK = "#28293E"
+BS_GRAY_DEEP = "#010322"
+BS_GRAY_LIGHT = "#B5B6C3"
+BS_GRAY_MEDIUM = "#93949E"
+EVCC_DARK_YELLOW = "#BBB400"
+EVCC_SELF = "#0FDE41"
+EVCC_YELLOW = "#FAF000"
 
 def main(config):
     api_key = config.str("api_key") or INFLUXDB_TOKEN
@@ -55,13 +55,13 @@ def main(config):
 
     consumption = get_gridPower_series(flux_defaults, api_key)
 
-    phasesActive= get_last_value("phasesActive", flux_defaults, api_key) 
-    chargePower = get_last_value("chargePower", flux_defaults, api_key) 
-    gridPower_last   = get_last_value("gridPower", flux_defaults, api_key)
-    homePower   = get_last_value("homePower", flux_defaults, api_key)
-    pvPower     = get_last_value("pvPower",flux_defaults, api_key) 
+    phasesActive = get_last_value("phasesActive", flux_defaults, api_key)
+    chargePower = get_last_value("chargePower", flux_defaults, api_key)
+    gridPower = get_last_value("gridPower", flux_defaults, api_key)
+    homePower = get_last_value("homePower", flux_defaults, api_key)
+    pvPower = get_last_value("pvPower", flux_defaults, api_key)
 
-    total=int(chargePower) + int(homePower) + int(pvPower)
+    total = int(chargePower) + int(homePower) + int(pvPower)
     perc_chargePower = int(chargePower) / total * 100
     perc_homePower = int(homePower) / total * 100
     perc_pvPower = int(pvPower) / total * 100
@@ -71,24 +71,26 @@ def main(config):
             render.Plot(data = consumption, width = 64, height = 32, color = "#0f0", color_inverted = "#f00", fill = True),
         ],
     )
-    render_max = render.Column(children = [
-        render.Text(chargePower, font = FONT, color = "#f00"),
-        render.Text(pvPower, font = FONT, color = "#0f0"),
-        render.Text(homePower, font = FONT, color = "#f00"),
-    ]
+    render_max = render.Column(
+        children = [
+            render.Text(chargePower, font = FONT, color = "#f00"),
+            render.Text(pvPower, font = FONT, color = "#0f0"),
+            render.Text(homePower, font = FONT, color = "#f00"),
+        ],
     )
 
-    render_box = render.Box(child = render.Row(
-                expanded = True,
-                main_align = "center",
-                cross_align = "end",
-                children = [
-                    render.Box(width = 20, height = 4, color = BS_GRAY_DARK),
-                    render.Box(width = 20, height = 4, color = EVCC_YELLOW),
-                    render.Box(width = 20, height = 4, color = EVCC_SELF),
-                ],
-            ),
-        )
+    render_box = render.Box(
+        child = render.Row(
+            expanded = True,
+            main_align = "center",
+            cross_align = "end",
+            children = [
+                render.Box(width = 20, height = 4, color = BS_GRAY_DARK),
+                render.Box(width = 20, height = 4, color = EVCC_YELLOW),
+                render.Box(width = 20, height = 4, color = EVCC_SELF),
+            ],
+        ),
+    )
 
     return render.Root(child = render.Stack(children = [render_max, render_box]))
 
@@ -117,10 +119,10 @@ def get_max_value(measurement, defaults, api_key):
         |> max() \
         |> toInt() \
         |> keep(columns: ["_value"])'
-    
+
     data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_MAX))
     value = data[1][3] if len(data) > 0 else "0000"
-    print("%s_max=%s" % (measurement,value))
+    print("%s (max) = %s" % (measurement, value))
     return value
 
 def get_last_value(measurement, defaults, api_key):
@@ -131,10 +133,10 @@ def get_last_value(measurement, defaults, api_key):
         |> last() \
         |> toInt() \
         |> keep(columns: ["_value"])'
-    
+
     data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_LAST))
     value = data[1][3] if len(data) > 0 else "0000"
-    print("%s_last=%s" % (measurement,value))
+    print("%s (last) = %s" % (measurement, value))
     return value
 
 def readInfluxDB(query, api_key, ttl):
