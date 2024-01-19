@@ -39,6 +39,21 @@ EVCC_DARK_YELLOW = "#BBB400"
 EVCC_SELF = "#0FDE41"
 EVCC_YELLOW = "#FAF000"
 
+CAR_ICON = base64.decode("""
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAGlJREFUOE+tk9EOQCEEQPk+Ppfvc9dDW8lcLT2G0zFCeDz4WA/9ABExIgrFVBWYeXv0MDAzQ8TQLIr1ATJ138/aymaQ6U+IzwkBEWjelQDZbvwCKou1TuloYQCyMfp4L6Ci73P6/8KtxQc+MVIRuOdZPAAAAABJRU5ErkJggg==
+""")
+
+SUN_ICON = base64.decode("""
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAALRJREFUOE+tk+sRwjAMg6UN6AawAYzSiWAkNoEN6AawgSFc3VNdJ1ce/RnbXxRZJX782Jo3Myt1ktW+RcHM7gA2ZUgBL9YJwDHCUnIZjI0j7EyyV9UToNxMsltjiV6ggNl7Xb4DXVH0pfoENa9l5hsQG2oeZCr+A4jGJYouAPZZHtTE2Z6jiQAOJK/j+cM3Frew2HOibgvg5mo+DdKO5JAGyQ9DfKdsaMSbAC1+9TOtibL2PAEOz40RgUO7WwAAAABJRU5ErkJggg==
+""")
+
+POWER_ICON = base64.decode("""
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAI1JREFUOE+9ktENgCAMRO82kJHcQDd1A0fCDTAl1mCpYEIif1Du9XItMXg4qIcLSCklD0yy+l89GPF8gfYCuJLc9H4DvK7asaiJcBGx1jLgzXIvH4E0M7AOPmXQcvQvwHaTnD456AVqIe4eyCcHFADEJsCKnD3Iky0hDwcKaIw3ApgABJJHhvWWpVcfBpwmV00RXHy7wQAAAABJRU5ErkJggg==
+""")
+
+# LAYOUT DEFINITIONS
+BAR_WIDTH = 60
+
 def main(config):
     api_key = config.str("api_key") or INFLUXDB_TOKEN
     bucket = config.get("bucket") or DEFAULT_BUCKET
@@ -61,38 +76,81 @@ def main(config):
     homePower = get_last_value("homePower", flux_defaults, api_key)
     pvPower = get_last_value("pvPower", flux_defaults, api_key)
 
-    total = int(chargePower) + int(homePower) + int(pvPower)
-    perc_chargePower = int(chargePower) / total * 100
-    perc_homePower = int(homePower) / total * 100
-    perc_pvPower = int(pvPower) / total * 100
+    # gridPower positive means I am consuming from the power grid
+    if gridPower > 0:
+        in_total = gridPower + pvPower
+    else:
+        in_total = pvPower
+    print("in_total = %s" % in_total)
 
     render_graph = render.Stack(
         children = [
-            render.Plot(data = consumption, width = 64, height = 32, color = "#0f0", color_inverted = "#f00", fill = True),
+            #render.Plot(data = consumption, width = 64, height = 4, color = "#0f0", color_inverted = "#f00", fill = True),
+            render.Plot(data = consumption, width = 64, height = 16, color = "#0f0", color_inverted = "#f00", fill = True),
         ],
     )
     render_max = render.Column(
         children = [
-            render.Text(chargePower, font = FONT, color = "#f00"),
-            render.Text(pvPower, font = FONT, color = "#0f0"),
-            render.Text(homePower, font = FONT, color = "#f00"),
+            render.Text(str(chargePower), font = FONT, color = "#f00"),
+            render.Text(str(pvPower), font = FONT, color = "#0f0"),
+            render.Text(str(homePower), font = FONT, color = "#f00"),
         ],
     )
 
-    render_box = render.Box(
-        child = render.Row(
-            expanded = True,
-            main_align = "center",
-            cross_align = "end",
-            children = [
-                render.Box(width = 20, height = 4, color = BS_GRAY_DARK),
-                render.Box(width = 20, height = 4, color = EVCC_YELLOW),
-                render.Box(width = 20, height = 4, color = EVCC_SELF),
-            ],
-        ),
+    # TODO use columns instead of pixel-perfect alignment
+    upper_row = render.Row(
+        children = [
+            render.Box(width = 3, height = 16, color = "#000"),
+            render.Image(src = SUN_ICON),
+            render.Box(width = 4, height = 16, color = "#000"),
+            render.Image(src = POWER_ICON),
+            render.Box(width = 4, height = 16, color = "#000"),
+            render.Image(src = CAR_ICON),
+        ],
     )
 
-    return render.Root(child = render.Stack(children = [render_max, render_box]))
+    lower_row = render.Row(
+        expanded = True,
+        main_align = "space_evenly",
+        cross_align = "center",
+        children = [
+            render.Column(
+                expanded = True,
+                main_align = "space_around",
+                cross_align = "center",
+                children = [
+                    render.Text(str(pvPower), font = FONT, color = "#0f0"),
+                ],
+            ),
+            render.Column(
+                expanded = True,
+                main_align = "space_around",
+                cross_align = "center",
+                children = [
+                    render.Text(str(homePower), font = FONT, color = "#f00"),
+                ],
+            ),
+            render.Column(
+                expanded = True,
+                main_align = "space_around",
+                cross_align = "center",
+                children = [
+                    render.Text(str(chargePower), font = FONT, color = "#f00"),
+                ],
+            ),
+        ],
+    )
+
+    #lower_columns =
+
+    basic_frame = render.Column(
+        #children=[upper_row,lower_row, render_graph],
+        children = [upper_row, lower_row],
+    )
+
+    #return render.Root(child = render.Stack(children = [render_max, render_graph]))
+    return render.Root(basic_frame)
+    #return render.Root(render.Image(src=POWER_ICON))
 
 # https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
 # grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
@@ -123,7 +181,7 @@ def get_max_value(measurement, defaults, api_key):
     data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_MAX))
     value = data[1][3] if len(data) > 0 else "0000"
     print("%s (max) = %s" % (measurement, value))
-    return value
+    return int(value)
 
 def get_last_value(measurement, defaults, api_key):
     fluxql = defaults + ' \
@@ -137,7 +195,7 @@ def get_last_value(measurement, defaults, api_key):
     data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_LAST))
     value = data[1][3] if len(data) > 0 else "0000"
     print("%s (last) = %s" % (measurement, value))
-    return value
+    return int(value)
 
 def readInfluxDB(query, api_key, ttl):
     key = base64.encode(api_key + query)
