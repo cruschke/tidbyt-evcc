@@ -30,25 +30,25 @@ TTL_FOR_MAX = 900  # how often the max values are being refreshed
 TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are being refreshed
 
 # COLOR DEFINITIONS
-BS_GRAY_BRIGHT = "#F3F3F7"
-BS_GRAY_DARK = "#28293E"
-BS_GRAY_DEEP = "#010322"
-BS_GRAY_LIGHT = "#B5B6C3"
-BS_GRAY_MEDIUM = "#93949E"
-EVCC_DARK_YELLOW = "#BBB400"
-EVCC_SELF = "#0FDE41"
-EVCC_YELLOW = "#FAF000"
+BLACK = "#000"
+GREEN = "#0F0"
+GREY = "#5A5A5A"
+RED = "#F00"
+WHITE = "#FFF"
+YELLOW = "#FF0"
+
+
 
 CAR_ICON = base64.decode("""
-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
+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
 """)
 
 SUN_ICON = base64.decode("""
-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
+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
 """)
 
 POWER_ICON = base64.decode("""
-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
+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
 """)
 
 # LAYOUT DEFINITIONS
@@ -85,72 +85,89 @@ def main(config):
 
     render_graph = render.Stack(
         children = [
-            #render.Plot(data = consumption, width = 64, height = 4, color = "#0f0", color_inverted = "#f00", fill = True),
-            render.Plot(data = consumption, width = 64, height = 16, color = "#0f0", color_inverted = "#f00", fill = True),
-        ],
-    )
-    render_max = render.Column(
-        children = [
-            render.Text(str(chargePower), font = FONT, color = "#f00"),
-            render.Text(str(pvPower), font = FONT, color = "#0f0"),
-            render.Text(str(homePower), font = FONT, color = "#f00"),
+            render.Plot(data = consumption, width = 64, height = 32, color = RED, color_inverted = GREEN, fill = True),
         ],
     )
 
-    # TODO use columns instead of pixel-perfect alignment
-    upper_row = render.Row(
-        children = [
-            render.Box(width = 3, height = 16, color = "#000"),
-            render.Image(src = SUN_ICON),
-            render.Box(width = 4, height = 16, color = "#000"),
-            render.Image(src = POWER_ICON),
-            render.Box(width = 4, height = 16, color = "#000"),
-            render.Image(src = CAR_ICON),
-        ],
-    )
+    column1 = [
+        render.Image(src = SUN_ICON),
+        render.Box(width = 2, height = 2, color = BLACK), # for better horizontal alignment
+        render.Text(str(pvPower), font = FONT, color = GREEN),
+    ]
+    column2 = [
+        render.Image(src = POWER_ICON),
+        render.Box(width = 2, height = 2, color = BLACK), # for better horizontal alignment
+        render.Text(str(gridPower), font = FONT, color = get_power_color(gridPower)),  
+        render.Text(str(homePower), font = FONT, color = WHITE),
+    ]
+    column3 = [
+        render.Image(src = CAR_ICON),
+        render.Box(width = 2, height = 2, color = BLACK), # for better horizontal alignment
+        render.Text(str(chargePower) + "%", font = FONT, color = get_power_color(chargePower)),
+        render.Text(str(phasesActive) + "/3", font = FONT, color = RED),
+    ]
 
-    lower_row = render.Row(
-        expanded = True,
+    columns = render.Row(
+        children = [
+            render.Column(
+                children = column1,
+                main_align = "center",
+                cross_align = "center",
+            ),
+            render.Column(
+                children = [render.Box(width = 1, height = 32, color = GREY)],
+            ),
+            render.Column(
+                children = column2,
+                main_align = "center",
+                cross_align = "center",
+            ),
+            render.Column(
+                children = [render.Box(width = 1, height = 32, color = GREY)],
+            ),
+            render.Column(
+                children = column3,
+                main_align = "center",
+                cross_align = "center",
+            ),
+        ],
         main_align = "space_evenly",
-        cross_align = "center",
-        children = [
-            render.Column(
-                expanded = True,
-                main_align = "space_around",
-                cross_align = "center",
-                children = [
-                    render.Text(str(pvPower), font = FONT, color = "#0f0"),
-                ],
-            ),
-            render.Column(
-                expanded = True,
-                main_align = "space_around",
-                cross_align = "center",
-                children = [
-                    render.Text(str(homePower), font = FONT, color = "#f00"),
-                ],
-            ),
-            render.Column(
-                expanded = True,
-                main_align = "space_around",
-                cross_align = "center",
-                children = [
-                    render.Text(str(chargePower), font = FONT, color = "#f00"),
-                ],
-            ),
-        ],
+        expanded = True,
     )
-
-    #lower_columns =
 
     basic_frame = render.Column(
         #children=[upper_row,lower_row, render_graph],
-        children = [upper_row, lower_row],
+        #children = [upper_row, lower_row],
+        children = [columns],
     )
 
-    #return render.Root(child = render.Stack(children = [render_max, render_graph]))
+    #return render.Root(child = render.Stack(children = [basic_frame, render_graph]))
     return render.Root(basic_frame)
-    #return render.Root(render.Image(src=POWER_ICON))
+
+def get_power_color(power):
+    if power > 0:
+        color = RED
+    elif power < 0:
+        color = GREEN
+    else:
+        color = YELLOW
+    return color
+
+def get_phases_color(phases):
+    if phases == 0:
+        color = RED
+    elif phases == 1:
+        color = YELLOW
+    elif phases == 2:
+        color = YELLOW
+    elif phases == 3:
+        color = GREEN
+        
+    else:
+        phases = GREY # this should never happen
+    return color
+
+
 
 # https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
 # grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
