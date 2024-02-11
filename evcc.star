@@ -23,8 +23,6 @@ DEFAULT_LOCATION = {
 }
 DEFAULT_TIMEZONE = "Europe/Berlin"
 
-#FONT = "tom-thumb"
-FONT = "tb-8"
 INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
 TTL_FOR_LAST = 60  # the TTL for up2date info
@@ -33,12 +31,12 @@ TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are 
 
 # COLOR DEFINITIONS
 BLACK = "#000"
+DARK_GREEN = "#062E03"
 GREEN = "#0F0"
 GREY = "#1A1A1A"
 RED = "#F00"
 WHITE = "#FFF"
 YELLOW = "#FF0"
-DARK_GREEN = "#062E03"
 
 CAR_ICON = base64.decode("""
 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
@@ -81,13 +79,6 @@ def main(config):
     homePower = get_last_value("homePower", flux_defaults, api_key)
     pvPower = get_last_value("pvPower", flux_defaults, api_key)
 
-    # gridPower positive means I am consuming from the power grid
-    if gridPower > 0:
-        in_total = gridPower + pvPower
-    else:
-        in_total = pvPower
-    print("in_total = %s" % in_total)
-
     if pvPower > homePower:
         col2_icon = PANEL_ICON
     else:
@@ -102,7 +93,10 @@ def main(config):
         col3_color2 = GREEN
     if phasesActive >= 3:
         col3_color3 = GREEN
-
+    else: # error case, phases should be in range 0-3 only
+        col3_color1 = RED
+        col3_color2 = RED
+        col3_color3 = RED       
     render_graph = render.Stack(
         children = [
             render.Plot(data = consumption, width = 64, height = 32, color = RED, color_inverted = GREEN, fill = True),
@@ -113,14 +107,13 @@ def main(config):
         # this is the PV power column
         render.Image(src = SUN_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(pvPower), font = FONT, color = get_power_color(pvPower)),
+        render.Text(str(pvPower), color = get_power_color(pvPower)),
     ]
     column2 = [
         # this is the grid power column
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(abs(gridPower)), font = FONT, color = get_power_color(gridPower)),  # abs() because I don't want to report negative numbers, thats why we have the color coding
-        #render.Text(str(homePower), font = FONT, color = WHITE),
+        render.Text(str(abs(gridPower)), color = get_power_color(gridPower)),  # abs() because I don't want to report negative numbers, thats why we have the color coding
     ]
     column3 = [
         # this is the car charging column
@@ -133,7 +126,7 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(str(chargePower) + "%", font = FONT, color = get_power_color(chargePower)),
+        render.Text(str(chargePower) + "%", color = get_power_color(chargePower)),
     ]
 
     columns = render.Row(
@@ -182,19 +175,6 @@ def get_power_color(power):
         color = YELLOW
     return color
 
-def get_phases_color(phases):
-    if phases == 0:
-        color = RED
-    elif phases == 1:
-        color = YELLOW
-    elif phases == 2:
-        color = YELLOW
-    elif phases == 3:
-        color = GREEN
-
-    else:
-        phases = GREY  # this should never happen
-    return color
 
 # https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
 # grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
