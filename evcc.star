@@ -22,7 +22,8 @@ DEFAULT_LOCATION = {
     "locality": "Weltzeituhr Alexanderlatz",
 }
 DEFAULT_TIMEZONE = "Europe/Berlin"
-FONT = "tom-thumb"
+#FONT = "tom-thumb"
+FONT = "tb-8"
 INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
 TTL_FOR_LAST = 60  # the TTL for up2date info
@@ -36,6 +37,7 @@ GREY = "#1A1A1A"
 RED = "#F00"
 WHITE = "#FFF"
 YELLOW = "#FF0"
+DARK_GREEN ="#062E03"
 
 
 
@@ -92,7 +94,15 @@ def main(config):
         col2_icon = PANEL_ICON
     else:
         col2_icon = GRID_ICON
+    
+    if phasesActive > 0:
+        col3_phases = phasesActive
+        col3_color = GREEN
 
+    else:
+        col3_phases = 3 
+        col3_color = DARK_GREEN
+    
     render_graph = render.Stack(
         children = [
             render.Plot(data = consumption, width = 64, height = 32, color = RED, color_inverted = GREEN, fill = True),
@@ -111,14 +121,14 @@ def main(config):
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK), # for better horizontal alignment
         render.Text(str(abs(gridPower)), font = FONT, color = get_power_color(gridPower)),  # abs() because I don't want to report negative numbers, thats why we have the color coding
-        render.Text(str(homePower), font = FONT, color = WHITE),
+        #render.Text(str(homePower), font = FONT, color = WHITE),
     ]
     column3 = [
         # this is the car charging column
         render.Image(src = CAR_ICON),
-        render.Box(width = 2, height = 2, color = BLACK), # for better horizontal alignment
+        render.Box(width = col3_phases, height = 1, color = col3_color), # draw a dot for each active phase
+        render.Box(width = 2, height = 1, color = BLACK), # for better horizontal alignment
         render.Text(str(chargePower) + "%", font = FONT, color = get_power_color(chargePower)),
-        render.Text(str(phasesActive) + "/3", font = FONT, color = RED),
     ]
 
     columns = render.Row(
@@ -210,7 +220,7 @@ def get_max_value(measurement, defaults, api_key):
         |> keep(columns: ["_value"])'
 
     data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_MAX))
-    value = data[1][3] if len(data) > 0 else "0000"
+    value = data[1][3] if len(data) > 0 else "0"
     print("%s (max) = %s" % (measurement, value))
     return int(value)
 
@@ -224,7 +234,7 @@ def get_last_value(measurement, defaults, api_key):
         |> keep(columns: ["_value"])'
 
     data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_LAST))
-    value = data[1][3] if len(data) > 0 else "0000"
+    value = data[1][3] if len(data) > 0 else "0"
     print("%s (last) = %s" % (measurement, value))
     return int(value)
 
