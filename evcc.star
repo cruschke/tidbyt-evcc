@@ -64,6 +64,7 @@ def main(config):
     location = config.get("location")
     loc = json.decode(location) if location else DEFAULT_LOCATION
     timezone = loc.get("timezone", DEFAULT_TIMEZONE)
+    scale_gridPower = int(config.str("scale_gridPower"))
 
     # some FluxQL query parameters that every single query needs
     flux_defaults = '                                                     \
@@ -93,13 +94,14 @@ def main(config):
         col3_color2 = GREEN
     if phasesActive >= 3:
         col3_color3 = GREEN
-    else: # error case, phases should be in range 0-3 only
+    else:  # error case, phases should be in range 0-3 only
         col3_color1 = RED
         col3_color2 = RED
-        col3_color3 = RED       
+        col3_color3 = RED
+
     render_graph = render.Stack(
         children = [
-            render.Plot(data = consumption, width = 64, height = 32, color = RED, color_inverted = GREEN, fill = True),
+            render.Plot(data = consumption, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True, y_lim = (-1 * scale_gridPower, scale_gridPower)),
         ],
     )
 
@@ -157,14 +159,19 @@ def main(config):
         expanded = True,
     )
 
-    basic_frame = render.Column(
-        #children=[upper_row,lower_row, render_graph],
-        #children = [upper_row, lower_row],
-        children = [columns],
-    )
+    
 
-    #return render.Root(child = render.Stack(children = [basic_frame, render_graph]))
-    return render.Root(basic_frame)
+    if config.str("variant") == "opt_columns":
+        basic_frame = render.Column(children = [columns])
+        return render.Root(basic_frame)
+    elif config.str("variant") == "opt_gridPower":
+        return render.Root(render_graph)
+
+    elif config.str("variant") == "opt_gridPower":
+        return render.Root(render_graph)
+
+    else:
+        return render.Root(render_graph)
 
 def get_power_color(power):
     if power > 0:
@@ -174,7 +181,6 @@ def get_power_color(power):
     else:
         color = YELLOW
     return color
-
 
 # https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
 # grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
@@ -270,6 +276,21 @@ def csv2touples(csvinput):
     #print(result)
     return result
 
+options = [
+    schema.Option(
+        display = "3 column display",
+        value = "opt_columns",
+    ),
+    schema.Option(
+        display = "gridPower consumption graph (last 12 hours)",
+        value = "opt_gridPower",
+    ),
+    schema.Option(
+        display = "charging graph",
+        value = "opt_chargePower",
+    ),
+]
+
 def get_schema():
     return schema.Schema(
         version = "1",
@@ -292,6 +313,21 @@ def get_schema():
                 name = "Location",
                 desc = "Location for which to display time.",
                 icon = "locationDot",
+            ),
+            schema.Dropdown(
+                id = "variant",
+                name = "application variant",
+                desc = "Which variant to display",
+                icon = "brush",
+                default = options[0].value,
+                options = options,
+            ),
+            schema.Text(
+                id = "scale_gridPower",
+                name = "gridPower scale",
+                desc = "the maximum expected value for gridPower, required for nice graphing",
+                icon = "gear",
+                default = "5000",
             ),
         ],
     )
