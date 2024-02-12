@@ -22,6 +22,7 @@ DEFAULT_LOCATION = {
     "locality": "Weltzeituhr Alexanderlatz",
 }
 DEFAULT_TIMEZONE = "Europe/Berlin"
+DEFAULT_GRIDPOWERSCALE = 0
 
 INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
@@ -64,7 +65,10 @@ def main(config):
     location = config.get("location")
     loc = json.decode(location) if location else DEFAULT_LOCATION
     timezone = loc.get("timezone", DEFAULT_TIMEZONE)
-    scale_gridPower = int(config.str("scale_gridPower"))
+    if config.str("scale_gridPower"): # make sure its set and not None
+        scale_gridPower = int(config.str("scale_gridPower")) 
+    else: 
+        scale_gridPower = DEFAULT_GRIDPOWERSCALE 
 
     # some FluxQL query parameters that every single query needs
     flux_defaults = '                                                     \
@@ -94,22 +98,28 @@ def main(config):
         col3_color2 = GREEN
     if phasesActive >= 3:
         col3_color3 = GREEN
-    else:  # error case, phases should be in range 0-3 only
+    else:  # no charging or error case
         col3_color1 = RED
         col3_color2 = RED
         col3_color3 = RED
 
-    render_graph = render.Stack(
-        children = [
-            render.Plot(data = consumption, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True, y_lim = (-1 * scale_gridPower, scale_gridPower)),
-        ],
-    )
-
+    if scale_gridPower > 0: # use dedicated scale
+        render_graph = render.Stack(
+            children = [
+                render.Plot(data = consumption, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True, y_lim = (-1 * scale_gridPower, scale_gridPower)),
+            ],
+        )
+    else: # use autoscale 
+        render_graph = render.Stack(
+            children = [
+                render.Plot(data = consumption, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True),
+            ],    
+        )
     column1 = [
         # this is the PV power column
         render.Image(src = SUN_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(pvPower), color = get_power_color(pvPower)),
+        render.Text(str(pvPower), color = get_power_color(pvPower*-1)), # pvPower needs to be reversed 
     ]
     column2 = [
         # this is the grid power column
@@ -160,10 +170,10 @@ def main(config):
     )
 
     
-
+    print(config.str("variant")) 
     if config.str("variant") == "opt_columns":
-        basic_frame = render.Column(children = [columns])
-        return render.Root(basic_frame)
+        #basic_frame = render.Column(children = [columns])
+        return render.Root(render.Column(children = [columns]))
     elif config.str("variant") == "opt_gridPower":
         return render.Root(render_graph)
 
@@ -171,7 +181,7 @@ def main(config):
         return render.Root(render_graph)
 
     else:
-        return render.Root(render_graph)
+        return render.Root(render.Column(children = [columns]))
 
 def get_power_color(power):
     if power > 0:
@@ -325,9 +335,9 @@ def get_schema():
             schema.Text(
                 id = "scale_gridPower",
                 name = "gridPower scale",
-                desc = "the maximum expected value for gridPower, required for nice graphing",
+                desc = "the maximum expected value for gridPower, required for nice graphing. Set to 0 for autoscaling.",
                 icon = "gear",
-                default = "5000",
+                default = str(DEFAULT_GRIDPOWERSCALE),
             ),
         ],
     )
