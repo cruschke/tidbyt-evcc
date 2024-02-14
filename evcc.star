@@ -24,7 +24,7 @@ DEFAULT_LOCATION = {
 DEFAULT_TIMEZONE = "Europe/Berlin"
 DEFAULT_GRIDPOWERSCALE = 0
 
-INFLUXDB_HOST = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
+INFLUXDB_HOST_DEFAULT = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
 TTL_FOR_LAST = 60  # the TTL for up2date info
 TTL_FOR_MAX = 900  # how often the max values are being refreshed
@@ -40,7 +40,7 @@ WHITE = "#FFF"
 YELLOW = "#FF0"
 
 CAR_ICON = base64.decode("""
-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
+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
 """)
 
 SUN_ICON = base64.decode("""
@@ -59,16 +59,17 @@ iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAnmVYSWZNTQAqAAAACAAGARIAAwAAAAEA
 BAR_WIDTH = 60
 
 def main(config):
+    influxdb_host = config.str("influxdb") or INFLUXDB_HOST_DEFAULT
     api_key = config.str("api_key") or INFLUXDB_TOKEN
     bucket = config.get("bucket") or DEFAULT_BUCKET
 
     location = config.get("location")
     loc = json.decode(location) if location else DEFAULT_LOCATION
     timezone = loc.get("timezone", DEFAULT_TIMEZONE)
-    if config.str("scale_gridPower"): # make sure its set and not None
-        scale_gridPower = int(config.str("scale_gridPower")) 
-    else: 
-        scale_gridPower = DEFAULT_GRIDPOWERSCALE 
+    if config.str("scale_gridPower"):  # make sure its set and not None
+        scale_gridPower = int(config.str("scale_gridPower"))
+    else:
+        scale_gridPower = DEFAULT_GRIDPOWERSCALE
 
     # some FluxQL query parameters that every single query needs
     flux_defaults = '                                                     \
@@ -76,16 +77,18 @@ def main(config):
         option location = timezone.location(name: "' + timezone + '")   \
         from(bucket:"' + bucket + '")'
 
-    consumption = get_gridPower_series(flux_defaults, api_key)
+    consumption = get_gridPower_series(influxdb_host, flux_defaults, api_key)
+    charging = get_chargePower_series(influxdb_host, flux_defaults, api_key)
+    print(charging)
 
-    phasesActive = get_last_value("phasesActive", flux_defaults, api_key)
-    chargePower = get_last_value("chargePower", flux_defaults, api_key)
-    gridPower = get_last_value("gridPower", flux_defaults, api_key)
-    homePower = get_last_value("homePower", flux_defaults, api_key)
-    pvPower = get_last_value("pvPower", flux_defaults, api_key)
+    phasesActive = get_last_value(influxdb_host, "phasesActive", flux_defaults, api_key)
+    chargePower = get_last_value(influxdb_host, "chargePower", flux_defaults, api_key)
+    gridPower = get_last_value(influxdb_host, "gridPower", flux_defaults, api_key)
+    homePower = get_last_value(influxdb_host, "homePower", flux_defaults, api_key)
+    pvPower = get_last_value(influxdb_host, "pvPower", flux_defaults, api_key)
 
     if pvPower > homePower:
-        col2_icon = PANEL_ICON
+        col2_icon = SUN_ICON
     else:
         col2_icon = GRID_ICON
 
@@ -103,23 +106,26 @@ def main(config):
         col3_color2 = RED
         col3_color3 = RED
 
-    if scale_gridPower > 0: # use dedicated scale
+    if scale_gridPower > 0:  # use dedicated scale
         render_graph = render.Stack(
             children = [
                 render.Plot(data = consumption, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True, y_lim = (-1 * scale_gridPower, scale_gridPower)),
             ],
         )
-    else: # use autoscale 
-        render_graph = render.Stack(
+    else:  # use autoscale
+        render_graph = render.Column(
             children = [
-                render.Plot(data = consumption, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True),
-            ],    
+                render.Plot(data = consumption, width = 64, height = 15, color = GREEN, color_inverted = RED, fill = True),
+                render.Box(width = 64, height = 1, color = BLACK),
+                render.Box(width = 64, height = 1, color = GREY),
+                render.Plot(data = charging, width = 64, height = 15, color = YELLOW, fill = True, y_lim = (0, 1000)),
+            ],
         )
     column1 = [
         # this is the PV power column
-        render.Image(src = SUN_ICON),
+        render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(pvPower), color = get_power_color(pvPower*-1)), # pvPower needs to be reversed 
+        render.Text(str(pvPower), color = get_power_color(pvPower * -1)),  # pvPower needs to be reversed
     ]
     column2 = [
         # this is the grid power column
@@ -169,10 +175,8 @@ def main(config):
         expanded = True,
     )
 
-    
-    print(config.str("variant")) 
+    print(config.str("variant"))
     if config.str("variant") == "opt_columns":
-        #basic_frame = render.Column(children = [columns])
         return render.Root(render.Column(children = [columns]))
     elif config.str("variant") == "opt_gridPower":
         return render.Root(render_graph)
@@ -197,7 +201,7 @@ def get_power_color(power):
 # inverted the series for more natural display of the data series
 # multiply by -1 to make it display logically correct in Plot
 
-def get_gridPower_series(defaults, api_key):
+def get_gridPower_series(dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -12h)                                    \
         |> filter(fn: (r) => r._measurement == "gridPower")         \
@@ -207,9 +211,21 @@ def get_gridPower_series(defaults, api_key):
         |> keep(columns: ["_time", "_value"])'
 
     #print ("query=" + fluxql)
-    return get_datatouples(fluxql, api_key, TTL_FOR_SERIES)
+    return get_datatouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
-def get_max_value(measurement, defaults, api_key):
+def get_chargePower_series(dbhost, defaults, api_key):
+    fluxql = defaults + ' \
+        |> range(start: -12h)                                    \
+        |> filter(fn: (r) => r._measurement == "chargePower")         \
+        |> aggregateWindow(every: 15m, fn: mean)                    \
+        |> fill(value: 0.0)                                         \
+        |> map(fn: (r) => ({r with _value: (float(v: r._value)) })) \
+        |> keep(columns: ["_time", "_value"])'
+
+    #print ("query=" + fluxql)
+    return get_datatouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
+
+def get_max_value(dbhost, measurement, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -1d) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
@@ -218,12 +234,12 @@ def get_max_value(measurement, defaults, api_key):
         |> toInt() \
         |> keep(columns: ["_value"])'
 
-    data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_MAX))
+    data = csv.read_all(readInfluxDB(dbhost, fluxql, api_key, TTL_FOR_MAX))
     value = data[1][3] if len(data) > 0 else "0"
     print("%s (max) = %s" % (measurement, value))
     return int(value)
 
-def get_last_value(measurement, defaults, api_key):
+def get_last_value(dbhost, measurement, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -1m) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
@@ -232,12 +248,12 @@ def get_last_value(measurement, defaults, api_key):
         |> toInt() \
         |> keep(columns: ["_value"])'
 
-    data = csv.read_all(readInfluxDB(fluxql, api_key, TTL_FOR_LAST))
+    data = csv.read_all(readInfluxDB(dbhost, fluxql, api_key, TTL_FOR_LAST))
     value = data[1][3] if len(data) > 0 else "0"
     print("%s (last) = %s" % (measurement, value))
     return int(value)
 
-def readInfluxDB(query, api_key, ttl):
+def readInfluxDB(dbhost, query, api_key, ttl):
     key = base64.encode(api_key + query)
     data = cache.get(key)
 
@@ -248,7 +264,7 @@ def readInfluxDB(query, api_key, ttl):
     #print("Cache MISS for %s" % query)
 
     rep = http.post(
-        INFLUXDB_HOST,
+        dbhost,
         headers = {
             "Authorization": "Token " + api_key,
             "Accept": "application/json",
@@ -267,8 +283,8 @@ def readInfluxDB(query, api_key, ttl):
 
     return rep.body()
 
-def get_datatouples(query, api_key, ttl):
-    result = readInfluxDB(query, api_key, ttl)
+def get_datatouples(dbhost, query, api_key, ttl):
+    result = readInfluxDB(dbhost, query, api_key, ttl)
     return csv2touples(result)
 
 # InfluxDB returns time series as CSV, we want touples instead
@@ -286,18 +302,27 @@ def csv2touples(csvinput):
     #print(result)
     return result
 
-options = [
+options_variant = [
     schema.Option(
-        display = "3 column display",
+        display = "3 columns",
         value = "opt_columns",
     ),
     schema.Option(
-        display = "gridPower consumption graph (last 12 hours)",
+        display = "gridPower and charging graph (last 12 hours)",
         value = "opt_gridPower",
     ),
+]
+
+# see https://docs.influxdata.com/influxdb/cloud-serverless/reference/regions/
+
+options_influxdb = [
     schema.Option(
-        display = "charging graph",
-        value = "opt_chargePower",
+        display = "EU Frankfurt",
+        value = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query",
+    ),
+    schema.Option(
+        display = "US East (Virginia)",
+        value = "https://us-east-1-1.aws.cloud2.influxdata.com/api/v2/query",
     ),
 ]
 
@@ -305,38 +330,46 @@ def get_schema():
     return schema.Schema(
         version = "1",
         fields = [
+            schema.Dropdown(
+                id = "influxdb",
+                name = "InfluxDB region",
+                desc = "InfluxDB Cloud region",
+                icon = "brush", # FIXME
+                default = options_influxdb[0].value,
+                options = options_influxdb,
+            ),
             schema.Text(
                 id = "api_key",
-                name = "API key",
-                desc = "API key for InfluxDB Cloud 2.0",
+                name = "InfluxDB API key",
+                desc = "API key for InfluxDB Cloud",
                 icon = "key",
             ),
             schema.Text(
                 id = "bucket",
-                name = "bucket name",
-                desc = "The name of the InfluxDB bucket, default \"evcc\"",
+                name = "InfluxDB bucket",
+                desc = "The name of the InfluxDB bucket",
                 icon = "database",
                 default = "evcc",
             ),
             schema.Location(
                 id = "location",
                 name = "Location",
-                desc = "Location for which to display time.",
+                desc = "Your device location",
                 icon = "locationDot",
             ),
             schema.Dropdown(
                 id = "variant",
-                name = "application variant",
+                name = "display variant",
                 desc = "Which variant to display",
-                icon = "brush",
-                default = options[0].value,
-                options = options,
+                icon = "brush", # FIXME
+                default = options_variant[0].value,
+                options = options_variant,
             ),
             schema.Text(
                 id = "scale_gridPower",
                 name = "gridPower scale",
                 desc = "the maximum expected value for gridPower, required for nice graphing. Set to 0 for autoscaling.",
-                icon = "gear",
+                icon = "gear", # FIXME
                 default = str(DEFAULT_GRIDPOWERSCALE),
             ),
         ],
