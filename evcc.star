@@ -334,7 +334,7 @@ def get_schema():
                 id = "influxdb",
                 name = "InfluxDB region",
                 desc = "InfluxDB Cloud region",
-                icon = "brush", # FIXME
+                icon = "cloud", 
                 default = options_influxdb[0].value,
                 options = options_influxdb,
             ),
@@ -361,7 +361,7 @@ def get_schema():
                 id = "variant",
                 name = "display variant",
                 desc = "Which variant to display",
-                icon = "brush", # FIXME
+                icon = "display", 
                 default = options_variant[0].value,
                 options = options_variant,
             ),
@@ -369,7 +369,7 @@ def get_schema():
                 id = "scale_gridPower",
                 name = "gridPower scale",
                 desc = "the maximum expected value for gridPower, required for nice graphing. Set to 0 for autoscaling.",
-                icon = "gear", # FIXME
+                icon = "up-right-and-down-left-from-center", 
                 default = str(DEFAULT_GRIDPOWERSCALE),
             ),
         ],
