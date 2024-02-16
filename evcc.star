@@ -19,13 +19,13 @@ DEFAULT_BUCKET = "evcc"
 DEFAULT_LOCATION = {
     "lat": 52.52136203907116,
     "lng": 13.413308033057413,
-    "locality": "Weltzeituhr Alexanderlatz",
+    "locality": "Weltzeituhr Alexanderplatz",
 }
 DEFAULT_TIMEZONE = "Europe/Berlin"
 DEFAULT_GRIDPOWERSCALE = 0
 
 INFLUXDB_HOST_DEFAULT = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
-INFLUXDB_TOKEN = "TVcTz0Q0KWFcJF8v3i1F0UY-4Jqp_ou5ThMBoHEt4Yw0zPXHl8IeX1LGP6uwK3eJ89Zeicq4CecPeoMRChXstg=="
+
 TTL_FOR_LAST = 60  # the TTL for up2date info
 TTL_FOR_MAX = 900  # how often the max values are being refreshed
 TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are being refreshed
@@ -60,7 +60,8 @@ BAR_WIDTH = 60
 
 def main(config):
     influxdb_host = config.str("influxdb") or INFLUXDB_HOST_DEFAULT
-    api_key = config.str("api_key") or INFLUXDB_TOKEN
+    api_key = config.str("api_key") or "UNDEFINED" # FIXME alert if not set
+    #api_key = "sfRmNP06r4hR4vfPxZX8_vLRXOAcbs2Ou9xyNpBHz6_twHK-t6SOlDUMUUelQCkc-P5-MMGJtAbYdn4Q0AmPJw=="
     bucket = config.get("bucket") or DEFAULT_BUCKET
 
     location = config.get("location")
@@ -77,15 +78,42 @@ def main(config):
         option location = timezone.location(name: "' + timezone + '")   \
         from(bucket:"' + bucket + '")'
 
-    consumption = get_gridPower_series(influxdb_host, flux_defaults, api_key)
-    charging = get_chargePower_series(influxdb_host, flux_defaults, api_key)
-    print(charging)
-
-    phasesActive = get_last_value(influxdb_host, "phasesActive", flux_defaults, api_key)
-    chargePower = get_last_value(influxdb_host, "chargePower", flux_defaults, api_key)
-    gridPower = get_last_value(influxdb_host, "gridPower", flux_defaults, api_key)
-    homePower = get_last_value(influxdb_host, "homePower", flux_defaults, api_key)
-    pvPower = get_last_value(influxdb_host, "pvPower", flux_defaults, api_key)
+    if api_key == "UNDEFINED":
+        
+        charging = [
+            (0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), 
+            (8, 0.0), (9, 0.0), (10, 0.0), (11, 0.0), (12, 0.0), (13, 0.0), (14, 0.0), (15, 0.0), 
+            (16, 0.0), (17, 0.0), (18, 0.0), (19, 0.0), (20, 0.0), (21, 0.0), (22, 0.0), (23, 0.0), 
+            (24, 0.0), (25, 0.0), (26, 0.0), (27, 0.0), (28, 0.0), (29, 0.0), (30, 0.0), (31, 0.0), 
+            (32, 0.0), (33, 0.0), (34, 0.0), (35, 0.0), (36, 0.0), (37, 0.0), (38, 0.0), (39, 0.0), 
+            (40, 0.0), (41, 0.0), (42, 0.0), (43, 0.0), (44, 0.0), (45, 0.0), (46, 0.0), (47, 0.0), 
+            (48, 0.0)
+        ]
+        consumption = [
+            (0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), 
+            (8, 0.0), (9, 0.0), (10, 0.0), (11, 0.0), (12, 0.0), (13, 0.0), (14, 0.0), (15, 0.0), 
+            (16, 0.0), (17, 0.0), (18, 0.0), (19, 0.0), (20, 0.0), (21, 0.0), (22, 0.0), (23, 0.0), 
+            (24, 0.0), (25, 0.0), (26, 0.0), (27, 0.0), (28, 0.0), (29, 0.0), (30, 0.0), (31, 0.0), 
+            (32, 0.0), (33, 0.0), (34, 0.0), (35, 0.0), (36, 0.0), (37, 0.0), (38, 0.0), (39, 0.0), 
+            (40, 0.0), (41, 0.0), (42, 0.0), (43, 0.0), (44, 0.0), (45, 0.0), (46, 0.0), (47, 0.0), 
+            (48, 0.0)
+        ]
+        chargePower = 0
+        gridPower = 685
+        homePower = 0
+        phasesActive = 0
+        pvPower = 5964
+    
+    else:
+        chargePower = get_last_value(influxdb_host, "chargePower", flux_defaults, api_key)
+        charging = get_chargePower_series(influxdb_host, flux_defaults, api_key)
+        consumption = get_gridPower_series(influxdb_host, flux_defaults, api_key)
+        gridPower = get_last_value(influxdb_host, "gridPower", flux_defaults, api_key)
+        gridPowerMax = get_max_value(influxdb_host, "gridPower", flux_defaults, api_key)
+        homePower = get_last_value(influxdb_host, "homePower", flux_defaults, api_key)
+        phasesActive = get_last_value(influxdb_host, "phasesActive", flux_defaults, api_key)
+        pvPower = get_last_value(influxdb_host, "pvPower", flux_defaults, api_key)
+        #pvPowerMax = get_max_value(influxdb_host, "pvPower", flux_defaults, api_key)
 
     if pvPower > homePower:
         col2_icon = SUN_ICON
@@ -126,12 +154,15 @@ def main(config):
         render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
         render.Text(str(pvPower), color = get_power_color(pvPower * -1)),  # pvPower needs to be reversed
+        #render.Text(str(pvPowerMax), color = WHITE),  
     ]
     column2 = [
         # this is the grid power column
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
         render.Text(str(abs(gridPower)), color = get_power_color(gridPower)),  # abs() because I don't want to report negative numbers, thats why we have the color coding
+        #render.Text(str(gridPowerMax), color = WHITE),  
+
     ]
     column3 = [
         # this is the car charging column
