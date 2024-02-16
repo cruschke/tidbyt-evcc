@@ -59,10 +59,9 @@ iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAnmVYSWZNTQAqAAAACAAGARIAAwAAAAEA
 BAR_WIDTH = 60
 
 def main(config):
-    influxdb_host = config.str("influxdb") or INFLUXDB_HOST_DEFAULT
-    api_key = config.str("api_key") or "UNDEFINED" # FIXME alert if not set
-    #api_key = "sfRmNP06r4hR4vfPxZX8_vLRXOAcbs2Ou9xyNpBHz6_twHK-t6SOlDUMUUelQCkc-P5-MMGJtAbYdn4Q0AmPJw=="
-    bucket = config.get("bucket") or DEFAULT_BUCKET
+    influxdb_host = config.str("influxdb", INFLUXDB_HOST_DEFAULT)
+    api_key = config.str("api_key", "UNDEFINED") 
+    bucket = config.get("bucket",DEFAULT_BUCKET)
 
     location = config.get("location")
     loc = json.decode(location) if location else DEFAULT_LOCATION
@@ -113,7 +112,7 @@ def main(config):
         homePower = get_last_value(influxdb_host, "homePower", flux_defaults, api_key)
         phasesActive = get_last_value(influxdb_host, "phasesActive", flux_defaults, api_key)
         pvPower = get_last_value(influxdb_host, "pvPower", flux_defaults, api_key)
-        #pvPowerMax = get_max_value(influxdb_host, "pvPower", flux_defaults, api_key)
+        pvPowerMax = get_max_value(influxdb_host, "pvPower", flux_defaults, api_key)
 
     if pvPower > homePower:
         col2_icon = SUN_ICON
