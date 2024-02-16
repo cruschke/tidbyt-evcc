@@ -60,8 +60,8 @@ BAR_WIDTH = 60
 
 def main(config):
     influxdb_host = config.str("influxdb", INFLUXDB_HOST_DEFAULT)
-    api_key = config.str("api_key", "UNDEFINED") 
-    bucket = config.get("bucket",DEFAULT_BUCKET)
+    api_key = config.str("api_key", "UNDEFINED")
+    bucket = config.get("bucket", DEFAULT_BUCKET)
 
     location = config.get("location")
     loc = json.decode(location) if location else DEFAULT_LOCATION
@@ -78,31 +78,114 @@ def main(config):
         from(bucket:"' + bucket + '")'
 
     if api_key == "UNDEFINED":
-        
         charging = [
-            (0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), 
-            (8, 0.0), (9, 0.0), (10, 0.0), (11, 0.0), (12, 0.0), (13, 0.0), (14, 0.0), (15, 0.0), 
-            (16, 0.0), (17, 0.0), (18, 0.0), (19, 0.0), (20, 0.0), (21, 0.0), (22, 0.0), (23, 0.0), 
-            (24, 0.0), (25, 0.0), (26, 0.0), (27, 0.0), (28, 0.0), (29, 0.0), (30, 0.0), (31, 0.0), 
-            (32, 0.0), (33, 0.0), (34, 0.0), (35, 0.0), (36, 0.0), (37, 0.0), (38, 0.0), (39, 0.0), 
-            (40, 0.0), (41, 0.0), (42, 0.0), (43, 0.0), (44, 0.0), (45, 0.0), (46, 0.0), (47, 0.0), 
-            (48, 0.0)
+            (0, 0.0),
+            (1, 0.0),
+            (2, 0.0),
+            (3, 0.0),
+            (4, 0.0),
+            (5, 0.0),
+            (6, 0.0),
+            (7, 0.0),
+            (8, 0.0),
+            (9, 0.0),
+            (10, 0.0),
+            (11, 0.0),
+            (12, 0.0),
+            (13, 0.0),
+            (14, 0.0),
+            (15, 0.0),
+            (16, 0.0),
+            (17, 0.0),
+            (18, 0.0),
+            (19, 0.0),
+            (20, 0.0),
+            (21, 0.0),
+            (22, 0.0),
+            (23, 0.0),
+            (24, 0.0),
+            (25, 0.0),
+            (26, 0.0),
+            (27, 0.0),
+            (28, 0.0),
+            (29, 0.0),
+            (30, 0.0),
+            (31, 0.0),
+            (32, 0.0),
+            (33, 0.0),
+            (34, 0.0),
+            (35, 0.0),
+            (36, 0.0),
+            (37, 0.0),
+            (38, 0.0),
+            (39, 0.0),
+            (40, 0.0),
+            (41, 0.0),
+            (42, 0.0),
+            (43, 0.0),
+            (44, 0.0),
+            (45, 0.0),
+            (46, 0.0),
+            (47, 0.0),
+            (48, 0.0),
         ]
         consumption = [
-            (0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), 
-            (8, 0.0), (9, 0.0), (10, 0.0), (11, 0.0), (12, 0.0), (13, 0.0), (14, 0.0), (15, 0.0), 
-            (16, 0.0), (17, 0.0), (18, 0.0), (19, 0.0), (20, 0.0), (21, 0.0), (22, 0.0), (23, 0.0), 
-            (24, 0.0), (25, 0.0), (26, 0.0), (27, 0.0), (28, 0.0), (29, 0.0), (30, 0.0), (31, 0.0), 
-            (32, 0.0), (33, 0.0), (34, 0.0), (35, 0.0), (36, 0.0), (37, 0.0), (38, 0.0), (39, 0.0), 
-            (40, 0.0), (41, 0.0), (42, 0.0), (43, 0.0), (44, 0.0), (45, 0.0), (46, 0.0), (47, 0.0), 
-            (48, 0.0)
+            (0, 0.0),
+            (1, 0.0),
+            (2, 0.0),
+            (3, 0.0),
+            (4, 0.0),
+            (5, 0.0),
+            (6, 0.0),
+            (7, 0.0),
+            (8, 0.0),
+            (9, 0.0),
+            (10, 0.0),
+            (11, 0.0),
+            (12, 0.0),
+            (13, 0.0),
+            (14, 0.0),
+            (15, 0.0),
+            (16, 0.0),
+            (17, 0.0),
+            (18, 0.0),
+            (19, 0.0),
+            (20, 0.0),
+            (21, 0.0),
+            (22, 0.0),
+            (23, 0.0),
+            (24, 0.0),
+            (25, 0.0),
+            (26, 0.0),
+            (27, 0.0),
+            (28, 0.0),
+            (29, 0.0),
+            (30, 0.0),
+            (31, 0.0),
+            (32, 0.0),
+            (33, 0.0),
+            (34, 0.0),
+            (35, 0.0),
+            (36, 0.0),
+            (37, 0.0),
+            (38, 0.0),
+            (39, 0.0),
+            (40, 0.0),
+            (41, 0.0),
+            (42, 0.0),
+            (43, 0.0),
+            (44, 0.0),
+            (45, 0.0),
+            (46, 0.0),
+            (47, 0.0),
+            (48, 0.0),
         ]
         chargePower = 0
         gridPower = 685
         homePower = 0
         phasesActive = 0
         pvPower = 5964
-    
+
     else:
         chargePower = get_last_value(influxdb_host, "chargePower", flux_defaults, api_key)
         charging = get_chargePower_series(influxdb_host, flux_defaults, api_key)
@@ -116,8 +199,10 @@ def main(config):
 
     if pvPower > homePower:
         col2_icon = SUN_ICON
+        col2_color = GREEN
     else:
         col2_icon = GRID_ICON
+        col2_color = RED
 
     col3_color1 = DARK_GREEN
     col3_color2 = DARK_GREEN
@@ -152,16 +237,15 @@ def main(config):
         # this is the PV power column
         render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(pvPower), color = get_power_color(pvPower * -1)),  # pvPower needs to be reversed
-        #render.Text(str(pvPowerMax), color = WHITE),  
+        render.Text(str(pvPower), color = WHITE),  # pvPower needs to be reversed
+        #render.Text(str(pvPowerMax), color = WHITE),
     ]
     column2 = [
         # this is the grid power column
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(abs(gridPower)), color = get_power_color(gridPower)),  # abs() because I don't want to report negative numbers, thats why we have the color coding
-        #render.Text(str(gridPowerMax), color = WHITE),  
-
+        render.Text(str(abs(gridPower)), color = col2_color),  # abs() because I don't want to report negative numbers, thats why we have the color coding
+        #render.Text(str(gridPowerMax), color = WHITE),
     ]
     column3 = [
         # this is the car charging column
@@ -174,7 +258,7 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(str(chargePower) + "%", color = get_power_color(chargePower)),
+        render.Text(str(chargePower) + "%", color = WHITE),
     ]
 
     columns = render.Row(
@@ -216,15 +300,6 @@ def main(config):
 
     else:
         return render.Root(render.Column(children = [columns]))
-
-def get_power_color(power):
-    if power > 0:
-        color = RED
-    elif power < 0:
-        color = GREEN
-    else:
-        color = YELLOW
-    return color
 
 # https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
 # grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
@@ -364,7 +439,7 @@ def get_schema():
                 id = "influxdb",
                 name = "InfluxDB region",
                 desc = "InfluxDB Cloud region",
-                icon = "cloud", 
+                icon = "cloud",
                 default = options_influxdb[0].value,
                 options = options_influxdb,
             ),
@@ -391,7 +466,7 @@ def get_schema():
                 id = "variant",
                 name = "display variant",
                 desc = "Which variant to display",
-                icon = "display", 
+                icon = "display",
                 default = options_variant[0].value,
                 options = options_variant,
             ),
@@ -399,7 +474,7 @@ def get_schema():
                 id = "scale_gridPower",
                 name = "gridPower scale",
                 desc = "the maximum expected value for gridPower, required for nice graphing. Set to 0 for autoscaling.",
-                icon = "up-right-and-down-left-from-center", 
+                icon = "up-right-and-down-left-from-center",
                 default = str(DEFAULT_GRIDPOWERSCALE),
             ),
         ],
