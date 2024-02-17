@@ -129,6 +129,7 @@ def main(config):
             (47, 0.0),
             (48, 0.0),
         ]
+        # TODO generate a realistic power consumption series
         consumption = [
             (0, 0.0),
             (1, 0.0),
@@ -180,7 +181,7 @@ def main(config):
             (47, 0.0),
             (48, 0.0),
         ]
-        chargePower = 0
+        chargePower = 70
         gridPower = 685
         homePower = 0
         phasesActive = 0
@@ -204,19 +205,19 @@ def main(config):
         col2_icon = GRID_ICON
         col2_color = RED
 
-    col3_color1 = DARK_GREEN
-    col3_color2 = DARK_GREEN
-    col3_color3 = DARK_GREEN
+    col3_phase1 = DARK_GREEN
+    col3_phase2 = DARK_GREEN
+    col3_phase3 = DARK_GREEN
     if phasesActive >= 1:
-        col3_color1 = GREEN
+        col3_phase1 = GREEN
     if phasesActive >= 2:
-        col3_color2 = GREEN
+        col3_phase2 = GREEN
     if phasesActive >= 3:
-        col3_color3 = GREEN
+        col3_phase3 = GREEN
     else:  # no charging or error case
-        col3_color1 = RED
-        col3_color2 = RED
-        col3_color3 = RED
+        col3_phase1 = RED
+        col3_phase2 = RED
+        col3_phase3 = RED
 
     if scale_gridPower > 0:  # use dedicated scale
         render_graph = render.Stack(
@@ -252,9 +253,9 @@ def main(config):
         render.Image(src = CAR_ICON),
         render.Row(
             children = [
-                render.Box(width = 1, height = 1, color = col3_color1),
-                render.Box(width = 1, height = 1, color = col3_color2),
-                render.Box(width = 1, height = 1, color = col3_color3),
+                render.Box(width = 1, height = 1, color = col3_phase1),
+                render.Box(width = 1, height = 1, color = col3_phase2),
+                render.Box(width = 1, height = 1, color = col3_phase3),
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
@@ -289,7 +290,7 @@ def main(config):
         expanded = True,
     )
 
-    print(config.str("variant"))
+    #print(config.str("variant"))
     if config.str("variant") == "opt_columns":
         return render.Root(render.Column(children = [columns]))
     elif config.str("variant") == "opt_gridPower":
@@ -446,7 +447,7 @@ def get_schema():
             schema.Text(
                 id = "api_key",
                 name = "InfluxDB API key",
-                desc = "API key for InfluxDB Cloud",
+                desc = "API key for InfluxDB Cloud, if not set the app is in DEMO MODE",
                 icon = "key",
             ),
             schema.Text(
