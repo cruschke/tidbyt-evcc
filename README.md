@@ -1,5 +1,5 @@
 # tidbyt-evcc
-A Tidbyt app for evcc 
+[evcc](https://evcc.io/en/) is a popular open source project, allowing you to charge your BEV using as much self-generated power as possible. The project loves 💚 good UIs, a [Tidbyt](https://tidbyt.com/products/tidbyt) app displaying the most important statistics (excess solar power, charging power, state of charge) makes totally sense that's why 😀.
 
 # App design considerations
 
@@ -39,7 +39,7 @@ Restart your evcc and check the logs for errors.
 
 ## Verify your setup
 
-Use the InfluxDB "Data Explorer" to verify evcc is able to sent metrics.
+Use the InfluxDB "Data Explorer" to verify evcc is able to send metrics.
 
 * select the bucket `evcc`
 * pick measurement `gridPower` 
