@@ -47,3 +47,6 @@ Use the InfluxDB "Data Explorer" to verify evcc is able to send metrics.
 
 You should see some query results matching the statistics of your evcc installation.
 
+# Credits
+
+Icons from [FLATICON](https://www.flaticon.com/)
