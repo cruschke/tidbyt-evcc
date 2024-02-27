@@ -39,6 +39,8 @@ RED = "#F00"
 WHITE = "#FFF"
 YELLOW = "#FF0"
 
+FONT = "tom-thumb"
+
 CAR_ICON = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAMpJREFUOE+tkj0KAjEQhb8noqWFhZ2VWHgBT+BfY+0xPIrXsLVx1RMo1hZiY2mhYKmIIyvZZTcuLCwGAslkvnmZl4iCQwU5fkAzmwJ1oOSKvoGrpFlSJAWamQEH4O6BNaAjKc6PF2bWABaSulnXN7MtMJZ0Cc+TYKgWzidQ9eAHUAnzI1UfzPUqE4yCrte4SDL+X9BJnIAXcHT7NlAGWl9TnLOpHoPVhtGwn/kplsHahoPeL7jb7c/X262ZA84lTVLPkWunl1D4r34AxCFXD/jF0dwAAAAASUVORK5CYII=
 """)
@@ -79,7 +81,7 @@ def main(config):
         from(bucket:"' + bucket + '")'
 
     if api_key == "UNDEFINED":
-        charging = [
+        chargingSeries = [
             (0, 0.0),
             (1, 0.0),
             (2, 0.0),
@@ -130,8 +132,9 @@ def main(config):
             (47, 0.0),
             (48, 0.0),
         ]
-        # TODO generate a realistic power consumption series
-        consumption = [
+
+        # TODO generate a realistic power consumptionSeries series
+        consumptionSeries = [
             (0, 0.0),
             (1, 0.0),
             (2, 0.0),
@@ -182,24 +185,28 @@ def main(config):
             (47, 0.0),
             (48, 0.0),
         ]
-        chargePower = 70
-        gridPower = 685
-        homePower = 0
+        chargePowerLast = 3600
+        gridPowerLast = 685
+        gridPowerMax = 1000
+        homePowerLast = 0
         phasesActive = 0
-        pvPower = 5964
+        pvPowerLast = 2964
+        pvPowerMax = 6000
+        vehicleSocLast = 80
 
     else:
-        chargePower = get_last_value(influxdb_host, "chargePower", flux_defaults, api_key)
-        charging = get_chargePower_series(influxdb_host, flux_defaults, api_key)
-        consumption = get_gridPower_series(influxdb_host, flux_defaults, api_key)
-        gridPower = get_last_value(influxdb_host, "gridPower", flux_defaults, api_key)
-        gridPowerMax = get_max_value(influxdb_host, "gridPower", flux_defaults, api_key)
-        homePower = get_last_value(influxdb_host, "homePower", flux_defaults, api_key)
-        phasesActive = get_last_value(influxdb_host, "phasesActive", flux_defaults, api_key)
-        pvPower = get_last_value(influxdb_host, "pvPower", flux_defaults, api_key)
-        pvPowerMax = get_max_value(influxdb_host, "pvPower", flux_defaults, api_key)
+        chargePowerLast = getLastValue(influxdb_host, "chargePower", flux_defaults, api_key)
+        chargingSeries = getchargePoweSeries(influxdb_host, flux_defaults, api_key)
+        consumptionSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
+        gridPowerLast = getLastValue(influxdb_host, "gridPower", flux_defaults, api_key)
+        gridPowerMax = getMaxValue(influxdb_host, "gridPower", flux_defaults, api_key)
+        homePowerLast = getLastValue(influxdb_host, "homePower", flux_defaults, api_key)
+        phasesActive = getLastValue(influxdb_host, "phasesActive", flux_defaults, api_key)
+        pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key)
+        pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key)
+        vehicleSocLast = getLastValue(influxdb_host, "vehicleSoc", flux_defaults, api_key)
 
-    if pvPower > homePower:
+    if pvPowerLast > homePowerLast:
         col2_icon = SUN_ICON
         col2_color = GREEN
     else:
@@ -223,33 +230,35 @@ def main(config):
     if scale_gridPower > 0:  # use dedicated scale
         render_graph = render.Stack(
             children = [
-                render.Plot(data = consumption, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True, y_lim = (-1 * scale_gridPower, scale_gridPower)),
+                render.Plot(data = consumptionSeries, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True, y_lim = (-1 * scale_gridPower, scale_gridPower)),
             ],
         )
     else:  # use autoscale
         render_graph = render.Column(
             children = [
-                render.Plot(data = consumption, width = 64, height = 15, color = GREEN, color_inverted = RED, fill = True),
+                render.Plot(data = consumptionSeries, width = 64, height = 15, color = GREEN, color_inverted = RED, fill = True),
                 render.Box(width = 64, height = 1, color = BLACK),
                 render.Box(width = 64, height = 1, color = GREY),
-                render.Plot(data = charging, width = 64, height = 15, color = YELLOW, fill = True, y_lim = (0, 1000)),
+                render.Plot(data = chargingSeries, width = 64, height = 15, color = YELLOW, fill = True, y_lim = (0, 1000)),
             ],
         )
-    column1 = [
+    column_pvPower = [
         # this is the PV power column
         render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(pvPower), color = WHITE),  # pvPower needs to be reversed
-        #render.Text(str(pvPowerMax), color = WHITE),
+        render.Text(str(pvPowerLast), color = WHITE, font = FONT),
+        render.Box(width = 1, height = 2, color = BLACK),
+        render.Text(str(pvPowerMax), color = YELLOW, font = FONT),
     ]
-    column2 = [
+    column_consumption = [
         # this is the grid power column
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(abs(gridPower)), color = col2_color),  # abs() because I don't want to report negative numbers, thats why we have the color coding
-        #render.Text(str(gridPowerMax), color = WHITE),
+        render.Text(str(abs(gridPowerLast)), color = col2_color, font = FONT),  # abs() because I don't want to report negative numbers, thats why we have the color coding
+        render.Box(width = 1, height = 2, color = BLACK),
+        render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
     ]
-    column3 = [
+    column_charging = [
         # this is the car charging column
         render.Image(src = CAR_ICON),
         render.Row(
@@ -260,13 +269,15 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(str(chargePower) + "%", color = WHITE),
+        render.Text(str(chargePowerLast), color = WHITE, font = FONT),
+        render.Box(width = 1, height = 2, color = BLACK),
+        render.Text(str(vehicleSocLast) + "%", color = WHITE, font = FONT),
     ]
 
     columns = render.Row(
         children = [
             render.Column(
-                children = column1,
+                children = column_pvPower,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -274,7 +285,7 @@ def main(config):
                 children = [render.Box(width = 1, height = 32, color = GREY)],
             ),
             render.Column(
-                children = column2,
+                children = column_consumption,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -282,7 +293,7 @@ def main(config):
                 children = [render.Box(width = 1, height = 32, color = GREY)],
             ),
             render.Column(
-                children = column3,
+                children = column_charging,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -308,7 +319,7 @@ def main(config):
 # inverted the series for more natural display of the data series
 # multiply by -1 to make it display logically correct in Plot
 
-def get_gridPower_series(dbhost, defaults, api_key):
+def getgridPowerSeries(dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -12h)                                    \
         |> filter(fn: (r) => r._measurement == "gridPower")         \
@@ -320,7 +331,7 @@ def get_gridPower_series(dbhost, defaults, api_key):
     #print ("query=" + fluxql)
     return get_datatouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
-def get_chargePower_series(dbhost, defaults, api_key):
+def getchargePoweSeries(dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -12h)                                    \
         |> filter(fn: (r) => r._measurement == "chargePower")         \
@@ -332,9 +343,9 @@ def get_chargePower_series(dbhost, defaults, api_key):
     #print ("query=" + fluxql)
     return get_datatouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
-def get_max_value(dbhost, measurement, defaults, api_key):
+def getMaxValue(dbhost, measurement, defaults, api_key):
     fluxql = defaults + ' \
-        |> range(start: -1d) \
+        |> range(start: today()) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
         |> group() \
         |> max() \
@@ -346,7 +357,7 @@ def get_max_value(dbhost, measurement, defaults, api_key):
     print("%s (max) = %s" % (measurement, value))
     return int(value)
 
-def get_last_value(dbhost, measurement, defaults, api_key):
+def getLastValue(dbhost, measurement, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -1m) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
