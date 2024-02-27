@@ -57,11 +57,10 @@ GRID_ICON = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAlmVYSWZNTQAqAAAACAAFARIAAwAAAAEAAQAAARoABQAAAAEAAABKARsABQAAAAEAAABSATEAAgAAABEAAABah2kABAAAAAEAAABsAAAAAAAAAEgAAAABAAAASAAAAAF3d3cuaW5rc2NhcGUub3JnAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAADqADAAQAAAABAAAADgAAAACSN6n1AAAACXBIWXMAAAsTAAALEwEAmpwYAAADBGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+d3d3Lmlua3NjYXBlLm9yZzwveG1wOkNyZWF0b3JUb29sPgogICAgICAgICA8ZXhpZjpQaXhlbFhEaW1lbnNpb24+MTY8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpDb2xvclNwYWNlPjE8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjE2PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzI8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyPC90aWZmOllSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4K455w4AAAATtJREFUKBVlkU1LAlEUhuemUEotw4VESJEV/pE+iFyVG/9PFEH9CrftQ/0NEoglROt2faEUTs97O2ea8oVn3jPna4Z7kzRNQ4LwGuxavCCXyMUY34GNn6w9SazBHYyhagMF4oLFVeIHeIRaHCMoQxdc57YvMwpnXsRvoaxfaVlyis9gAoc+RbxvOdXUI53q/9vWVMSnsAh1y8m2QTnV1CO19cWPuOP3MSTcgz70QF8cQV7vgbcDNqzADEowgC3ogHQCY2jABPSXrzAvlunALuECluY7kiTeoRdoKoYQvvAjcqug+jO5G695b+YU/KIrxPfg0v1V1IjHnmzIkvHEKF7ZhK5FSNf5nmyQgg8dE/tdfRILSd7MD///tE5LJyhpmd/biPhFSdefw1GSzcvYOmzqHWnREwf0Ft/s8Q36b0u+QFvvZAAAAABJRU5ErkJggg==
 """)
 
-GRID_ICON2 = base64.decode("""
-iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAnmVYSWZNTQAqAAAACAAGARIAAwAAAAEAAQAAARoABQAAAAEAAABWARsABQAAAAEAAABeASgAAwAAAAEAAgAAATEAAgAAABoAAABmh2kABAAAAAEAAACAAAAAAAAAAEgAAAABAAAASAAAAAFQaXhlbG1hdG9yIFBybyBEZW1vIDIuMC42AAACoAIABAAAAAEAAAAOoAMABAAAAAEAAAAOAAAAAM2nMk0AAAAJcEhZcwAACxMAAAsTAQCanBgAAANsaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA2LjAuMCI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjE0PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjE0PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5QaXhlbG1hdG9yIFBybyBEZW1vIDIuMC42PC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMjQtMDItMTFUMTU6MzU6MDJaPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyMDAwMC8xMDAwMDwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CtlVVGMAAAEUSURBVCgVjZKxSsRAEIbXIEThKlstLCwVW8UH8AW0sbOytbe5xtZesLBRrvAFxDewsLYTuQc4IyHZ7OzM+OeO4U6PTZwEZjPzf/tnlnUuEcx8rxYyXVwnpPNyUzZ7i4yIfMy7HStVvp2ZqAqeGMJ5h3zW8t7vwKEyx8j80Au1AkBPBglsWfmCqDpsVHdRz5ObsEhp4DSLsDDwwJf4zpbAseo6hzhqXTDWr5AYn/8Cq1bY+nJ5HPBbVHrPs7WDFeeO2x7+9XVSFKem68ywe8Gsires63q7U2zNiugIBAH+noSwb/XejBvziBF9jM1Zr9gEcMlwhJ9EdGW1f2WAJz6GOx0Ol489tQOgTSJ/UxTjjZRmsf4DHk73Q3PzaAUAAAAASUVORK5CYII=
-""")
-
+# the main function
 def main(config):
+
+    # read the configuration
     influxdb_host = config.str("influxdb", INFLUXDB_HOST_DEFAULT)
     api_key = config.str("api_key", "UNDEFINED")
     bucket = config.get("bucket", DEFAULT_BUCKET)
@@ -206,6 +205,9 @@ def main(config):
         pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key)
         vehicleSocLast = getLastValue(influxdb_host, "vehicleSoc", flux_defaults, api_key)
 
+    # the main display
+
+    # color coding for the columns
     if pvPowerLast > homePowerLast:
         col2_icon = SUN_ICON
         col2_color = GREEN
@@ -242,6 +244,9 @@ def main(config):
                 render.Plot(data = chargingSeries, width = 64, height = 15, color = YELLOW, fill = True, y_lim = (0, 1000)),
             ],
         )
+    
+    # the main columns
+
     column_pvPower = [
         # this is the PV power column
         render.Image(src = PANEL_ICON),
@@ -329,7 +334,7 @@ def getgridPowerSeries(dbhost, defaults, api_key):
         |> keep(columns: ["_time", "_value"])'
 
     #print ("query=" + fluxql)
-    return get_datatouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
+    return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
 def getchargePoweSeries(dbhost, defaults, api_key):
     fluxql = defaults + ' \
@@ -341,7 +346,7 @@ def getchargePoweSeries(dbhost, defaults, api_key):
         |> keep(columns: ["_time", "_value"])'
 
     #print ("query=" + fluxql)
-    return get_datatouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
+    return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
 def getMaxValue(dbhost, measurement, defaults, api_key):
     fluxql = defaults + ' \
@@ -394,6 +399,7 @@ def readInfluxDB(dbhost, query, api_key, ttl):
     #print(rep.status_code)
     #print(rep.body())
 
+    # check if the request was successful
     if rep.status_code != 200:
         fail("InfluxDB API request failed with status {}".format(rep.status_code))
         return None
@@ -401,7 +407,7 @@ def readInfluxDB(dbhost, query, api_key, ttl):
 
     return rep.body()
 
-def get_datatouples(dbhost, query, api_key, ttl):
+def getTouples(dbhost, query, api_key, ttl):
     result = readInfluxDB(dbhost, query, api_key, ttl)
     return csv2touples(result)
 
