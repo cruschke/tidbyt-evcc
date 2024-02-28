@@ -201,8 +201,9 @@ def main(config):
         gridPowerMax = getMaxValue(influxdb_host, "gridPower", flux_defaults, api_key)
         homePowerLast = getLastValue(influxdb_host, "homePower", flux_defaults, api_key)
         phasesActive = getLastValue(influxdb_host, "phasesActive", flux_defaults, api_key)
-        pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key)
-        pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key)
+        pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key) 
+        pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key) 
+        # TODO: max can be lower than last, as max is calculated every 15mins, while last is every 1min
         vehicleSocLast = getLastValue(influxdb_host, "vehicleSoc", flux_defaults, api_key)
 
     # the main display
@@ -348,9 +349,10 @@ def getchargePoweSeries(dbhost, defaults, api_key):
     #print ("query=" + fluxql)
     return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
+# make it today() instead -12
 def getMaxValue(dbhost, measurement, defaults, api_key):
     fluxql = defaults + ' \
-        |> range(start: today()) \
+        |> range(start: -12h) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
         |> group() \
         |> max() \
@@ -402,7 +404,7 @@ def readInfluxDB(dbhost, query, api_key, ttl):
     # check if the request was successful
     if rep.status_code != 200:
         fail("InfluxDB API request failed with status {}".format(rep.status_code))
-        return None
+        return None # TODO: proper error handling
     cache.set(key, base64.encode(rep.body()), ttl_seconds = ttl)
 
     return rep.body()
