@@ -361,7 +361,7 @@ def getMaxValue(dbhost, measurement, defaults, api_key):
 
     data = csv.read_all(readInfluxDB(dbhost, fluxql, api_key, TTL_FOR_MAX))
     value = data[1][3] if len(data) > 0 else "0"
-    print("%s (max) = %s" % (measurement, value))
+    print("%sMax = %s" % (measurement, value))
     return int(value)
 
 def getLastValue(dbhost, measurement, defaults, api_key):
@@ -375,7 +375,7 @@ def getLastValue(dbhost, measurement, defaults, api_key):
 
     data = csv.read_all(readInfluxDB(dbhost, fluxql, api_key, TTL_FOR_LAST))
     value = data[1][3] if len(data) > 0 else "0"
-    print("%s (last) = %s" % (measurement, value))
+    print("%sLast = %s" % (measurement, value))
     return int(value)
 
 def readInfluxDB(dbhost, query, api_key, ttl):
