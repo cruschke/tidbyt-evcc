@@ -27,7 +27,7 @@ DEFAULT_GRIDPOWERSCALE = 0
 INFLUXDB_HOST_DEFAULT = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 
 TTL_FOR_LAST = 60  # the TTL for up2date info
-TTL_FOR_MAX = 900  # how often the max values are being refreshed
+TTL_FOR_MAX = 60  # how often the max values are being refreshed
 TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are being refreshed
 
 # COLOR DEFINITIONS
@@ -59,7 +59,6 @@ iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
 
 # the main function
 def main(config):
-
     # read the configuration
     influxdb_host = config.str("influxdb", INFLUXDB_HOST_DEFAULT)
     api_key = config.str("api_key", "UNDEFINED")
@@ -201,8 +200,9 @@ def main(config):
         gridPowerMax = getMaxValue(influxdb_host, "gridPower", flux_defaults, api_key)
         homePowerLast = getLastValue(influxdb_host, "homePower", flux_defaults, api_key)
         phasesActive = getLastValue(influxdb_host, "phasesActive", flux_defaults, api_key)
-        pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key) 
-        pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key) 
+        pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key)
+        pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key)
+
         # TODO: max can be lower than last, as max is calculated every 15mins, while last is every 1min
         vehicleSocLast = getLastValue(influxdb_host, "vehicleSoc", flux_defaults, api_key)
 
@@ -230,41 +230,27 @@ def main(config):
         col3_phase2 = RED
         col3_phase3 = RED
 
-    if scale_gridPower > 0:  # use dedicated scale
-        render_graph = render.Stack(
-            children = [
-                render.Plot(data = consumptionSeries, width = 64, height = 32, color = GREEN, color_inverted = RED, fill = True, y_lim = (-1 * scale_gridPower, scale_gridPower)),
-            ],
-        )
-    else:  # use autoscale
-        render_graph = render.Column(
-            children = [
-                render.Plot(data = consumptionSeries, width = 64, height = 15, color = GREEN, color_inverted = RED, fill = True),
-                render.Box(width = 64, height = 1, color = BLACK),
-                render.Box(width = 64, height = 1, color = GREY),
-                render.Plot(data = chargingSeries, width = 64, height = 15, color = YELLOW, fill = True, y_lim = (0, 1000)),
-            ],
-        )
-    
-    # the main columns
 
-    column_pvPower = [
+
+    # the screen1 main columns
+
+    screen1_column_pvPower = [
         # this is the PV power column
         render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(pvPowerLast), color = WHITE, font = FONT),
+        render.Text(str(pvPowerLast), color = WHITE),
         render.Box(width = 1, height = 2, color = BLACK),
-        render.Text(str(pvPowerMax), color = YELLOW, font = FONT),
+        #render.Text(str(pvPowerMax), color = YELLOW, font = FONT),
     ]
-    column_consumption = [
+    screen1_column_consumption = [
         # this is the grid power column
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(abs(gridPowerLast)), color = col2_color, font = FONT),  # abs() because I don't want to report negative numbers, thats why we have the color coding
+        render.Text(str(abs(gridPowerLast)), color = col2_color),  # abs() because I don't want to report negative numbers, thats why we have the color coding
         render.Box(width = 1, height = 2, color = BLACK),
-        render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
+        #render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
     ]
-    column_charging = [
+    screen1_column_charging = [
         # this is the car charging column
         render.Image(src = CAR_ICON),
         render.Row(
@@ -280,10 +266,10 @@ def main(config):
         render.Text(str(vehicleSocLast) + "%", color = WHITE, font = FONT),
     ]
 
-    columns = render.Row(
+    screen1_columns = render.Row(
         children = [
             render.Column(
-                children = column_pvPower,
+                children = screen1_column_pvPower,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -291,7 +277,7 @@ def main(config):
                 children = [render.Box(width = 1, height = 32, color = GREY)],
             ),
             render.Column(
-                children = column_consumption,
+                children = screen1_column_consumption,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -299,7 +285,7 @@ def main(config):
                 children = [render.Box(width = 1, height = 32, color = GREY)],
             ),
             render.Column(
-                children = column_charging,
+                children = screen1_column_charging,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -308,17 +294,56 @@ def main(config):
         expanded = True,
     )
 
+    screen2_graph_consumption = render.Column(
+        children = [
+            render.Plot(data = consumptionSeries, width = 32, height = 15, color = GREEN, color_inverted = RED, fill = True),
+        ],
+    )
+    screen2_graph_charging = render.Column(
+        children = [
+            render.Plot(data = chargingSeries, width = 32, height = 15, color = GREEN, color_inverted = RED, fill = True),
+        ],
+    )
+
+    screen2_columns = render.Row(
+        children = [
+            render.Column(
+                children = [
+                    render.Text(str(pvPowerMax), color = GREEN, font = FONT),
+                    render.Box(width = 1, height = 2, color = BLACK),
+                    render.Text(str(gridPowerMax), color = RED, font = FONT),
+                ],
+                main_align = "center",
+                cross_align = "center",
+            ),
+            render.Column(
+                children = [render.Box(width = 1, height = 32, color = GREY)],
+            ),
+            render.Column(
+                children = [
+                    screen2_graph_consumption
+                ],
+                main_align = "center",
+                cross_align = "center",
+            ),
+        ],
+        main_align = "space_evenly",
+        expanded = True,
+    )
+
+  
+
     #print(config.str("variant"))
     if config.str("variant") == "opt_columns":
-        return render.Root(render.Column(children = [columns]))
+        return render.Root(render.Column(children = [screen1_columns]))
     elif config.str("variant") == "opt_gridPower":
-        return render.Root(render_graph)
+        return render.Root(screen2_columns)
 
     elif config.str("variant") == "opt_gridPower":
-        return render.Root(render_graph)
+        return render.Root(screen2_columns)
 
     else:
-        return render.Root(render.Column(children = [columns]))
+        return render.Root(render.Column(children = [screen1_columns]))
 
 # https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
 # grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
@@ -352,7 +377,7 @@ def getchargePoweSeries(dbhost, defaults, api_key):
 # make it today() instead -12
 def getMaxValue(dbhost, measurement, defaults, api_key):
     fluxql = defaults + ' \
-        |> range(start: -12h) \
+        |> range(start: today()) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
         |> group() \
         |> max() \
@@ -404,7 +429,7 @@ def readInfluxDB(dbhost, query, api_key, ttl):
     # check if the request was successful
     if rep.status_code != 200:
         fail("InfluxDB API request failed with status {}".format(rep.status_code))
-        return None # TODO: proper error handling
+        return None  # TODO: proper error handling
     cache.set(key, base64.encode(rep.body()), ttl_seconds = ttl)
 
     return rep.body()
