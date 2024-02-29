@@ -80,7 +80,7 @@ def main(config):
         from(bucket:"' + bucket + '")'
 
     if api_key == "UNDEFINED":
-        pvPowerSeries = [
+        chargingSeries = [  
             (0, 0.0),
             (1, 1.0),
             (2, 2.0),
@@ -132,8 +132,8 @@ def main(config):
             (48, 0.0),
         ]
 
-        # TODO generate a realistic power consumptionSeries series
-        chargingSeries = [
+        # TODO generate a realistic power pvPowerSeries series
+        pvPowerSeries = [
             (0, 0.0),
             (1, 0.0),
             (2, 5.0),
@@ -186,6 +186,7 @@ def main(config):
         ]
         #consumptionSeries = chargePoweSeries
         chargePowerLast = 3600
+        chargePowerMax = 2000
         gridPowerLast = 685
         gridPowerMax = 1000
         homePowerLast = 0
@@ -196,6 +197,7 @@ def main(config):
 
     else:
         chargePowerLast = getLastValue(influxdb_host, "chargePower", flux_defaults, api_key)
+        chargePowerMax = getMaxValue(influxdb_host, "chargePower", flux_defaults, api_key)
         chargingSeries = getchargePoweSeries(influxdb_host, flux_defaults, api_key)
         #consumptionSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
         gridPowerLast = getLastValue(influxdb_host, "gridPower", flux_defaults, api_key)
@@ -303,9 +305,8 @@ def main(config):
         render.Text(str(pvPowerMax), color = GREEN, font = FONT),
     ]
     screen_2_1_2 = [
-        render.Text("1234",color = WHITE, font = FONT),
 
-        #render.Text(str(chargePowerLast),color = WHITE, font = FONT),
+        render.Text(str(chargePowerMax),color = WHITE, font = FONT),
 
     ]
     screen_2_2_1 = [
