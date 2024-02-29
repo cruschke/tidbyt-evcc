@@ -16,6 +16,7 @@ load("schema.star", "schema")
 load("time.star", "time")
 
 DEFAULT_BUCKET = "evcc"
+DEFAULT_VARIANT = "screen_1"
 DEFAULT_LOCATION = {
     "lat": 52.52136203907116,
     "lng": 13.413308033057413,
@@ -79,7 +80,7 @@ def main(config):
         from(bucket:"' + bucket + '")'
 
     if api_key == "UNDEFINED":
-        chargingSeries = [
+        pvPowerSeries = [
             (0, 0.0),
             (1, 1.0),
             (2, 2.0),
@@ -132,7 +133,7 @@ def main(config):
         ]
 
         # TODO generate a realistic power consumptionSeries series
-        consumptionSeries = [
+        chargingSeries = [
             (0, 0.0),
             (1, 0.0),
             (2, 5.0),
@@ -183,6 +184,7 @@ def main(config):
             (47, 0.0),
             (48, 0.0),
         ]
+        #consumptionSeries = chargePoweSeries
         chargePowerLast = 3600
         gridPowerLast = 685
         gridPowerMax = 1000
@@ -195,7 +197,7 @@ def main(config):
     else:
         chargePowerLast = getLastValue(influxdb_host, "chargePower", flux_defaults, api_key)
         chargingSeries = getchargePoweSeries(influxdb_host, flux_defaults, api_key)
-        consumptionSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
+        #consumptionSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
         gridPowerLast = getLastValue(influxdb_host, "gridPower", flux_defaults, api_key)
         gridPowerMax = getMaxValue(influxdb_host, "gridPower", flux_defaults, api_key)
         homePowerLast = getLastValue(influxdb_host, "homePower", flux_defaults, api_key)
@@ -203,9 +205,7 @@ def main(config):
         pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key)
         pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key)
         pvPowerSeries = getpvPowerSeries(influxdb_host, flux_defaults, api_key)
-        print(pvPowerSeries)
 
-        # TODO: max can be lower than last, as max is calculated every 15mins, while last is every 1min
         vehicleSocLast = getLastValue(influxdb_host, "vehicleSoc", flux_defaults, api_key)
 
     # the main display
@@ -232,10 +232,10 @@ def main(config):
         col3_phase2 = RED
         col3_phase3 = RED
 
-
-
+    ############################################################
     # the screen1 main columns
-    screen1_column_pvPower = [
+    ############################################################
+    screen_1_1 = [
         # this is the PV power column
         render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
@@ -243,7 +243,7 @@ def main(config):
         render.Box(width = 1, height = 2, color = BLACK),
         #render.Text(str(pvPowerMax), color = YELLOW, font = FONT),
     ]
-    screen1_column_consumption = [
+    screen_1_2 = [
         # this is the grid power column
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
@@ -251,7 +251,7 @@ def main(config):
         render.Box(width = 1, height = 2, color = BLACK),
         #render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
     ]
-    screen1_column_charging = [
+    screen_1_3 = [
         # this is the car charging column
         render.Image(src = CAR_ICON),
         render.Row(
@@ -267,10 +267,10 @@ def main(config):
         render.Text(str(vehicleSocLast) + "%", color = WHITE, font = FONT),
     ]
 
-    screen1_columns = render.Row(
+    screen_1 = render.Row(
         children = [
             render.Column(
-                children = screen1_column_pvPower,
+                children = screen_1_1,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -278,7 +278,7 @@ def main(config):
                 children = [render.Box(width = 1, height = 32, color = GREY)],
             ),
             render.Column(
-                children = screen1_column_consumption,
+                children = screen_1_2,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -286,7 +286,7 @@ def main(config):
                 children = [render.Box(width = 1, height = 32, color = GREY)],
             ),
             render.Column(
-                children = screen1_column_charging,
+                children = screen_1_3,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -356,19 +356,20 @@ def main(config):
         main_align = "space_evenly",
         expanded = True,
     )
+
+    screen_2 = render.Column(
+        children = [
+            screen2_columns_1, 
+            screen2_columns_2
+        ]
+    )
     
-
-    #print(config.str("variant"))
-    if config.str("variant") == "opt_columns":
-        return render.Root(render.Column(children = [screen1_columns]))
-    elif config.str("variant") == "opt_gridPower":
-        return render.Root(render.Column(children = [screen2_columns_1, screen2_columns_2]))
-
-    elif config.str("variant") == "opt_gridPower":
-        return render.Root(render.Column(children = [screen2_columns_1, screen2_columns_2]))
-
+    variant = config.str("variant", DEFAULT_VARIANT)
+    print("variant=" + variant)
+    if variant == "screen_1":
+        return render.Root(screen_1)
     else:
-        return render.Root(render.Column(children = [screen1_columns]))
+        return render.Root(screen_2)
 
 # https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
 # grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
@@ -491,14 +492,14 @@ def csv2touples(csvinput):
     #print(result)
     return result
 
-options_variant = [
+options_screen = [
     schema.Option(
         display = "3 columns",
-        value = "opt_columns",
+        value = "screen_1",
     ),
     schema.Option(
-        display = "gridPower and charging graph (last 12 hours)",
-        value = "opt_gridPower",
+        display = "pvPower and charging graphs (last 12 hours)",
+        value = "screen_2",
     ),
 ]
 
@@ -551,8 +552,8 @@ def get_schema():
                 name = "display variant",
                 desc = "Which variant to display",
                 icon = "display",
-                default = options_variant[0].value,
-                options = options_variant,
+                default = DEFAULT_VARIANT,
+                options = options_screen,
             ),
             schema.Text(
                 id = "scale_gridPower",
