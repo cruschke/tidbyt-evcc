@@ -81,28 +81,28 @@ def main(config):
     if api_key == "UNDEFINED":
         chargingSeries = [
             (0, 0.0),
-            (1, 0.0),
-            (2, 0.0),
-            (3, 0.0),
-            (4, 0.0),
-            (5, 0.0),
-            (6, 0.0),
-            (7, 0.0),
-            (8, 0.0),
-            (9, 0.0),
+            (1, 1.0),
+            (2, 2.0),
+            (3, 3.0),
+            (4, 4.0),
+            (5, 5.0),
+            (6, 6.0),
+            (7, 7.0),
+            (8, 6.0),
+            (9, 5.0),
             (10, 0.0),
             (11, 0.0),
             (12, 0.0),
             (13, 0.0),
-            (14, 0.0),
-            (15, 0.0),
-            (16, 0.0),
-            (17, 0.0),
-            (18, 0.0),
-            (19, 0.0),
+            (14, 5.0),
+            (15, 7.0),
+            (16, 7.0),
+            (17, 11.0),
+            (18, 8.0),
+            (19, 4.0),
             (20, 0.0),
             (21, 0.0),
-            (22, 0.0),
+            (22, 4.0),
             (23, 0.0),
             (24, 0.0),
             (25, 0.0),
@@ -135,22 +135,22 @@ def main(config):
         consumptionSeries = [
             (0, 0.0),
             (1, 0.0),
-            (2, 0.0),
-            (3, 0.0),
-            (4, 0.0),
-            (5, 0.0),
-            (6, 0.0),
-            (7, 0.0),
-            (8, 0.0),
-            (9, 0.0),
-            (10, 0.0),
-            (11, 0.0),
-            (12, 0.0),
-            (13, 0.0),
-            (14, 0.0),
-            (15, 0.0),
-            (16, 0.0),
-            (17, 0.0),
+            (2, 5.0),
+            (3, 10.0),
+            (4, 12.0),
+            (5, 12.0),
+            (6, 5.0),
+            (7, 5.0),
+            (8, 5.0),
+            (9, -5.0),
+            (10, -5.0),
+            (11, -10.0),
+            (12, -8.0),
+            (13, .0),
+            (14, 10.0),
+            (15, 12.0),
+            (16, 14.0),
+            (17, 15.0),
             (18, 0.0),
             (19, 0.0),
             (20, 0.0),
@@ -202,6 +202,8 @@ def main(config):
         phasesActive = getLastValue(influxdb_host, "phasesActive", flux_defaults, api_key)
         pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key)
         pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key)
+        pvPowerSeries = getpvPowerSeries(influxdb_host, flux_defaults, api_key)
+        print(pvPowerSeries)
 
         # TODO: max can be lower than last, as max is calculated every 15mins, while last is every 1min
         vehicleSocLast = getLastValue(influxdb_host, "vehicleSoc", flux_defaults, api_key)
@@ -233,7 +235,6 @@ def main(config):
 
 
     # the screen1 main columns
-
     screen1_column_pvPower = [
         # this is the PV power column
         render.Image(src = PANEL_ICON),
@@ -294,35 +295,40 @@ def main(config):
         expanded = True,
     )
 
-    screen2_graph_consumption = render.Column(
-        children = [
-            render.Plot(data = consumptionSeries, width = 32, height = 15, color = GREEN, color_inverted = RED, fill = True),
-        ],
-    )
-    screen2_graph_charging = render.Column(
-        children = [
-            render.Plot(data = chargingSeries, width = 32, height = 15, color = GREEN, color_inverted = RED, fill = True),
-        ],
-    )
+    ############################################################
+    # the screen2 main columns
+    ############################################################
+    screen_2_1_1 = [
 
-    screen2_columns = render.Row(
+        render.Text(str(pvPowerMax), color = GREEN, font = FONT),
+    ]
+    screen_2_1_2 = [
+        render.Text("1234",color = WHITE, font = FONT),
+
+        #render.Text(str(chargePowerLast),color = WHITE, font = FONT),
+
+    ]
+    screen_2_2_1 = [
+        render.Plot(data = pvPowerSeries, width = 42, height = 15, color = GREEN, color_inverted = RED),
+
+    ]
+    screen_2_2_2 = [
+        render.Plot(data = chargingSeries, width = 42, height = 15, color = GREEN, color_inverted = RED, fill = True),
+
+    ]
+
+    screen2_columns_1 = render.Row(
         children = [
             render.Column(
-                children = [
-                    render.Text(str(pvPowerMax), color = GREEN, font = FONT),
-                    render.Box(width = 1, height = 2, color = BLACK),
-                    render.Text(str(gridPowerMax), color = RED, font = FONT),
-                ],
+                children = screen_2_1_1,
                 main_align = "center",
                 cross_align = "center",
             ),
             render.Column(
-                children = [render.Box(width = 1, height = 32, color = GREY)],
+                children = [render.Box(width = 1, height = 16, color = GREY)],
             ),
             render.Column(
-                children = [
-                    screen2_graph_consumption
-                ],
+                children = screen_2_2_1,
                 main_align = "center",
                 cross_align = "center",
             ),
@@ -331,16 +337,35 @@ def main(config):
         expanded = True,
     )
 
-  
+    screen2_columns_2 = render.Row(
+        children = [
+            render.Column(
+                children = screen_2_1_2,
+                main_align = "center",
+                cross_align = "center",
+            ),
+            render.Column(
+                children = [render.Box(width = 1, height = 32, color = GREY)],
+            ),
+            render.Column(
+                children = screen_2_2_2,
+                main_align = "center",
+                cross_align = "center",
+            ),
+        ],
+        main_align = "space_evenly",
+        expanded = True,
+    )
+    
 
     #print(config.str("variant"))
     if config.str("variant") == "opt_columns":
         return render.Root(render.Column(children = [screen1_columns]))
     elif config.str("variant") == "opt_gridPower":
-        return render.Root(screen2_columns)
+        return render.Root(render.Column(children = [screen2_columns_1, screen2_columns_2]))
 
     elif config.str("variant") == "opt_gridPower":
-        return render.Root(screen2_columns)
+        return render.Root(render.Column(children = [screen2_columns_1, screen2_columns_2]))
 
     else:
         return render.Root(render.Column(children = [screen1_columns]))
@@ -366,6 +391,19 @@ def getchargePoweSeries(dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -12h)                                    \
         |> filter(fn: (r) => r._measurement == "chargePower")         \
+        |> aggregateWindow(every: 15m, fn: mean)                    \
+        |> fill(value: 0.0)                                         \
+        |> map(fn: (r) => ({r with _value: (float(v: r._value)) })) \
+        |> keep(columns: ["_time", "_value"])'
+
+    #print ("query=" + fluxql)
+    return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
+
+def getpvPowerSeries(dbhost, defaults, api_key):
+    fluxql = defaults + ' \
+        |> range(start: -12h)                                    \
+        |> filter(fn: (r) => r._measurement == "pvPower")         \
+        |> group() \
         |> aggregateWindow(every: 15m, fn: mean)                    \
         |> fill(value: 0.0)                                         \
         |> map(fn: (r) => ({r with _value: (float(v: r._value)) })) \
