@@ -232,7 +232,7 @@ def main(config):
         col2_color = YELLOWGREEN
     else:
         col2_icon = GRID_ICON
-        col2_color = RED
+        col2_color = FIREBRICK
 
     col3_phase1 = DARK_GREEN
     col3_phase2 = DARK_GREEN
@@ -255,7 +255,7 @@ def main(config):
         # this is the PV power column
         render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(pvPowerLast), color = WHITE),
+        render.Text(str(pvPowerLast), color = YELLOWGREEN),
         render.Box(width = 1, height = 2, color = BLACK),
         #render.Text(str(pvPowerMax), color = YELLOW, font = FONT),
     ]
@@ -278,7 +278,7 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(str(chargePowerLast), color = WHITE, font = FONT),
+        render.Text(str(chargePowerLast), color = STEELBLUE, font = FONT),
         render.Box(width = 1, height = 2, color = BLACK),
         render.Text(str(vehicleSocLast) + "%", color = WHITE, font = FONT),
     ]
