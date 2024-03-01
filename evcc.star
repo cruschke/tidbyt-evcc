@@ -33,12 +33,26 @@ TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are 
 
 # COLOR DEFINITIONS
 BLACK = "#000"
+BLUE = "#00F"
+
 DARK_GREEN = "#062E03"
 GREEN = "#0F0"
 GREY = "#1A1A1A"
 RED = "#F00"
 WHITE = "#FFF"
 YELLOW = "#FF0"
+
+BARNRED = "780000"
+FIREBRICK = "C1121F"
+PAPAYAWHIP = "FDF0D5"
+PRUSSIANBLUE = "003049"
+AIRSUPERIORITYBLUE = "669BBC"
+
+BITTERSWEET = "FF595E"
+SUNGLOW = "FFCA3A"
+YELLOWGREEN = "8AC926"
+STEELBLUE = "1982C4"
+ULTRAVIOLET = "6A4C93"
 
 FONT = "tom-thumb"
 
@@ -186,13 +200,13 @@ def main(config):
         ]
         #consumptionSeries = chargePoweSeries
         chargePowerLast = 3600
-        chargePowerMax = 2000
+        chargePowerMax = "2.5k"
         gridPowerLast = 685
         gridPowerMax = 1000
         homePowerLast = 0
         phasesActive = 0
         pvPowerLast = 2964
-        pvPowerMax = 6000
+        pvPowerMax = "6.3k"
         vehicleSocLast = 80
 
     else:
@@ -215,7 +229,7 @@ def main(config):
     # color coding for the columns
     if pvPowerLast > homePowerLast:
         col2_icon = SUN_ICON
-        col2_color = GREEN
+        col2_color = YELLOWGREEN
     else:
         col2_icon = GRID_ICON
         col2_color = RED
@@ -300,35 +314,45 @@ def main(config):
     ############################################################
     # the screen2 main columns
     ############################################################
+    
+    # pvPowerMax
     screen_2_1_1 = [
 
-        render.Text(str(pvPowerMax), color = GREEN, font = FONT),
+        render.Text(str(pvPowerMax), color = YELLOWGREEN, font = FONT),
     ]
+
+    # chargePowerMax
     screen_2_1_2 = [
-
-        render.Text(str(chargePowerMax),color = WHITE, font = FONT),
-
+        render.Text(str(chargePowerMax),color = STEELBLUE, font = FONT),
     ]
+
+    # pvPowerSeries
     screen_2_2_1 = [
-        render.Plot(data = pvPowerSeries, width = 42, height = 15, color = GREEN, color_inverted = RED),
-
+        render.Plot(data = pvPowerSeries, width = 45, height = 15, color = YELLOWGREEN, color_inverted = FIREBRICK),
     ]
-    screen_2_2_2 = [
-        render.Plot(data = chargingSeries, width = 42, height = 15, color = GREEN, color_inverted = RED, fill = True),
 
+    # chargingSeries
+    screen_2_2_2 = [
+        render.Plot(data = chargingSeries, width = 45, height = 15, color = STEELBLUE),
     ]
 
     screen2_columns_1 = render.Row(
         children = [
-            render.Column(
-                children = screen_2_1_1,
-                main_align = "center",
-                cross_align = "center",
+            render.Box(
+                child=render.Column(
+                    # pvPowerMax
+                    children = screen_2_1_1,
+                    main_align = "center",
+                    cross_align = "center",
+                ),
+                width=15,
+                height=15,
             ),
             render.Column(
                 children = [render.Box(width = 1, height = 16, color = GREY)],
             ),
             render.Column(
+                # pvPowerSeries
                 children = screen_2_2_1,
                 main_align = "center",
                 cross_align = "center",
@@ -340,15 +364,22 @@ def main(config):
 
     screen2_columns_2 = render.Row(
         children = [
-            render.Column(
-                children = screen_2_1_2,
-                main_align = "center",
-                cross_align = "center",
+            render.Box(
+                child=render.Column(
+                    # chargePowerMax
+                    children = screen_2_1_2,
+                    main_align = "center",
+                    cross_align = "center",
+                ),
+                width=15,
+                height=15,
             ),
             render.Column(
                 children = [render.Box(width = 1, height = 32, color = GREY)],
             ),
+
             render.Column(
+                # chargingSeries
                 children = screen_2_2_2,
                 main_align = "center",
                 cross_align = "center",
@@ -360,7 +391,10 @@ def main(config):
 
     screen_2 = render.Column(
         children = [
-            screen2_columns_1, 
+            screen2_columns_1,
+            render.Column(
+                children = [render.Box(width = 18, height = 1, color = GREY)],
+            ), 
             screen2_columns_2
         ]
     )
