@@ -210,19 +210,21 @@ def main(config):
         vehicleSocLast = 80
 
     else:
+        # individual queries for the values
         chargePowerLast = getLastValue(influxdb_host, "chargePower", flux_defaults, api_key)
         chargePowerMax = getMaxValue(influxdb_host, "chargePower", flux_defaults, api_key)
-        chargePowerSeries = getchargePoweSeries(influxdb_host, flux_defaults, api_key)
-        gridPowerSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
         gridPowerLast = getLastValue(influxdb_host, "gridPower", flux_defaults, api_key)
         gridPowerMax = getMaxValue(influxdb_host, "gridPower", flux_defaults, api_key)
         homePowerLast = getLastValue(influxdb_host, "homePower", flux_defaults, api_key)
         phasesActive = getLastValue(influxdb_host, "phasesActive", flux_defaults, api_key)
         pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key)
         pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key)
-        pvPowerSeries = getpvPowerSeries(influxdb_host, flux_defaults, api_key)
-
         vehicleSocLast = getLastValue(influxdb_host, "vehicleSoc", flux_defaults, api_key)
+
+        # the time series for the plots
+        chargePowerSeries = getSeries("chargePower",influxdb_host, flux_defaults, api_key)
+        gridPowerSeries = getgridPowerSeries( influxdb_host, flux_defaults, api_key)
+        pvPowerSeries = getSeries("pvPower",influxdb_host, flux_defaults, api_key)
 
     # the main display
 
@@ -429,6 +431,20 @@ def main(config):
 # inverted the series for more natural display of the data series
 # multiply by -1 to make it display logically correct in Plot
 
+def getSeries(measurement, dbhost, defaults, api_key):
+    fluxql = defaults + ' \
+        |> range(start: -12h)                                    \
+        |> filter(fn: (r) => r._measurement == "' + measurement + '") \
+        |> group() \
+        |> aggregateWindow(every: 15m, fn: mean)                    \
+        |> fill(value: 0.0)                                         \
+        |> map(fn: (r) => ({r with _value: (float(v: r._value)) })) \
+        |> keep(columns: ["_time", "_value"])'
+
+    #print ("query=" + fluxql)
+    return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
+
+# this one is special as I need inverted numbers (multiply by -1)
 def getgridPowerSeries(dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -12h)                                    \
@@ -441,32 +457,6 @@ def getgridPowerSeries(dbhost, defaults, api_key):
     #print ("query=" + fluxql)
     return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
-def getchargePoweSeries(dbhost, defaults, api_key):
-    fluxql = defaults + ' \
-        |> range(start: -12h)                                    \
-        |> filter(fn: (r) => r._measurement == "chargePower")         \
-        |> aggregateWindow(every: 15m, fn: mean)                    \
-        |> fill(value: 0.0)                                         \
-        |> map(fn: (r) => ({r with _value: (float(v: r._value)) })) \
-        |> keep(columns: ["_time", "_value"])'
-
-    #print ("query=" + fluxql)
-    return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
-
-def getpvPowerSeries(dbhost, defaults, api_key):
-    fluxql = defaults + ' \
-        |> range(start: -12h)                                    \
-        |> filter(fn: (r) => r._measurement == "pvPower")         \
-        |> group() \
-        |> aggregateWindow(every: 15m, fn: mean)                    \
-        |> fill(value: 0.0)                                         \
-        |> map(fn: (r) => ({r with _value: (float(v: r._value)) })) \
-        |> keep(columns: ["_time", "_value"])'
-
-    #print ("query=" + fluxql)
-    return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
-
-# make it today() instead -12
 def getMaxValue(dbhost, measurement, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: today()) \
