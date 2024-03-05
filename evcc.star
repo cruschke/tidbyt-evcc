@@ -94,7 +94,7 @@ def main(config):
         from(bucket:"' + bucket + '")'
 
     if api_key == "UNDEFINED":
-        chargingSeries = [  
+        chargePowerSeries = [  
             (0, 0.0),
             (1, 1.0),
             (2, 2.0),
@@ -198,7 +198,7 @@ def main(config):
             (47, 0.0),
             (48, 0.0),
         ]
-        #consumptionSeries = chargePoweSeries
+        gridPowerSeries = chargePowerSeries
         chargePowerLast = 3600
         chargePowerMax = "2.5k"
         gridPowerLast = 685
@@ -212,8 +212,8 @@ def main(config):
     else:
         chargePowerLast = getLastValue(influxdb_host, "chargePower", flux_defaults, api_key)
         chargePowerMax = getMaxValue(influxdb_host, "chargePower", flux_defaults, api_key)
-        chargingSeries = getchargePoweSeries(influxdb_host, flux_defaults, api_key)
-        #consumptionSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
+        chargePowerSeries = getchargePoweSeries(influxdb_host, flux_defaults, api_key)
+        gridPowerSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
         gridPowerLast = getLastValue(influxdb_host, "gridPower", flux_defaults, api_key)
         gridPowerMax = getMaxValue(influxdb_host, "gridPower", flux_defaults, api_key)
         homePowerLast = getLastValue(influxdb_host, "homePower", flux_defaults, api_key)
@@ -317,7 +317,6 @@ def main(config):
     
     # pvPowerMax
     screen_2_1_1 = [
-
         render.Text(str(pvPowerMax), color = YELLOWGREEN, font = FONT),
     ]
 
@@ -328,12 +327,31 @@ def main(config):
 
     # pvPowerSeries
     screen_2_2_1 = [
-        render.Plot(data = pvPowerSeries, width = 45, height = 15, color = YELLOWGREEN, color_inverted = FIREBRICK),
+            render.Box(
+                child=render.Plot(
+                    data = gridPowerSeries, 
+                    width = 47, 
+                    height = 16, 
+                    color = YELLOWGREEN, 
+                    color_inverted = FIREBRICK
+                ),
+                width=45,
+                height=16,
+            ),
     ]
-
-    # chargingSeries
+        
+    # chargePowerSeries
     screen_2_2_2 = [
-        render.Plot(data = chargingSeries, width = 45, height = 15, color = STEELBLUE),
+            render.Box(
+                child=render.Plot(
+                    data = chargePowerSeries, 
+                    width = 47, 
+                    height = 15, 
+                    color = STEELBLUE
+                ),
+                width=45,
+                height=15,
+            ),
     ]
 
     screen2_columns_1 = render.Row(
@@ -379,7 +397,7 @@ def main(config):
             ),
 
             render.Column(
-                # chargingSeries
+                # chargePowerSeries
                 children = screen_2_2_2,
                 main_align = "center",
                 cross_align = "center",
@@ -393,7 +411,7 @@ def main(config):
         children = [
             screen2_columns_1,
             render.Column(
-                children = [render.Box(width = 18, height = 1, color = GREY)],
+                children = [render.Box(width = 64, height = 1, color = GREY)],
             ), 
             screen2_columns_2
         ]
@@ -533,7 +551,7 @@ options_screen = [
         value = "screen_1",
     ),
     schema.Option(
-        display = "pvPower and charging graphs (last 12 hours)",
+        display = "gridPower and chargePower graphs (last 12 hours)",
         value = "screen_2",
     ),
 ]
