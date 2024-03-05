@@ -1,6 +1,6 @@
 """
 Applet: evcc.io
-Summary: shows evcc.io status
+Summary: shows evcc solar charging status
 Description: Requires a public accessible InfluxDB, currently tested only with InfluxDB Cloud 2.0 free plan. 
 Author: cruschke
 """
@@ -10,7 +10,7 @@ load("encoding/base64.star", "base64")
 load("encoding/csv.star", "csv")
 load("encoding/json.star", "json")
 load("http.star", "http")
-load("math.star", "math")
+#load("math.star", "math")
 load("render.star", "render")
 load("schema.star", "schema")
 load("time.star", "time")
@@ -94,7 +94,7 @@ def main(config):
         from(bucket:"' + bucket + '")'
 
     if api_key == "UNDEFINED":
-        chargePowerSeries = [  
+        chargePowerSeries = [
             (0, 0.0),
             (1, 1.0),
             (2, 2.0),
@@ -211,20 +211,20 @@ def main(config):
 
     else:
         # individual queries for the values
-        chargePowerLast = getLastValue(influxdb_host, "chargePower", flux_defaults, api_key)
-        chargePowerMax = getMaxValue(influxdb_host, "chargePower", flux_defaults, api_key)
-        gridPowerLast = getLastValue(influxdb_host, "gridPower", flux_defaults, api_key)
-        gridPowerMax = getMaxValue(influxdb_host, "gridPower", flux_defaults, api_key)
-        homePowerLast = getLastValue(influxdb_host, "homePower", flux_defaults, api_key)
-        phasesActive = getLastValue(influxdb_host, "phasesActive", flux_defaults, api_key)
-        pvPowerLast = getLastValue(influxdb_host, "pvPower", flux_defaults, api_key)
-        pvPowerMax = getMaxValue(influxdb_host, "pvPower", flux_defaults, api_key)
-        vehicleSocLast = getLastValue(influxdb_host, "vehicleSoc", flux_defaults, api_key)
+        chargePowerLast = getLastValue("chargePower", influxdb_host, flux_defaults, api_key)
+        chargePowerMax = getMaxValue("chargePower", influxdb_host, flux_defaults, api_key)
+        gridPowerLast = getLastValue("gridPower", influxdb_host, flux_defaults, api_key)
+        gridPowerMax = getMaxValue("gridPower", influxdb_host, flux_defaults, api_key)
+        homePowerLast = getLastValue("homePower", influxdb_host, flux_defaults, api_key)
+        phasesActive = getLastValue("phasesActive", influxdb_host, flux_defaults, api_key)
+        pvPowerLast = getLastValue("pvPower", influxdb_host, flux_defaults, api_key)
+        pvPowerMax = getMaxValue("pvPower", influxdb_host, flux_defaults, api_key)
+        vehicleSocLast = getLastValue("vehicleSoc", influxdb_host, flux_defaults, api_key)
 
         # the time series for the plots
-        chargePowerSeries = getSeries("chargePower",influxdb_host, flux_defaults, api_key)
-        gridPowerSeries = getgridPowerSeries( influxdb_host, flux_defaults, api_key)
-        pvPowerSeries = getSeries("pvPower",influxdb_host, flux_defaults, api_key)
+        chargePowerSeries = getSeries("chargePower", influxdb_host, flux_defaults, api_key)
+        gridPowerSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
+        pvPowerSeries = getSeries("pvPower", influxdb_host, flux_defaults, api_key)
 
     # the main display
 
@@ -316,7 +316,7 @@ def main(config):
     ############################################################
     # the screen2 main columns
     ############################################################
-    
+
     # pvPowerMax
     screen_2_1_1 = [
         render.Text(humanize(pvPowerMax), color = YELLOWGREEN, font = FONT),
@@ -324,49 +324,49 @@ def main(config):
 
     # chargePowerMax
     screen_2_1_2 = [
-        render.Text(humanize(chargePowerMax),color = STEELBLUE, font = FONT),
+        render.Text(humanize(chargePowerMax), color = STEELBLUE, font = FONT),
     ]
 
     # pvPowerSeries
     screen_2_2_1 = [
-            render.Box(
-                child=render.Plot(
-                    data = gridPowerSeries, 
-                    width = 47, 
-                    height = 16, 
-                    color = YELLOWGREEN, 
-                    color_inverted = FIREBRICK
-                ),
-                width=45,
-                height=16,
+        render.Box(
+            child = render.Plot(
+                data = gridPowerSeries,
+                width = 47,
+                height = 16,
+                color = YELLOWGREEN,
+                color_inverted = FIREBRICK,
             ),
+            width = 45,
+            height = 16,
+        ),
     ]
-        
+
     # chargePowerSeries
     screen_2_2_2 = [
-            render.Box(
-                child=render.Plot(
-                    data = chargePowerSeries, 
-                    width = 47, 
-                    height = 15, 
-                    color = STEELBLUE
-                ),
-                width=45,
-                height=15,
+        render.Box(
+            child = render.Plot(
+                data = chargePowerSeries,
+                width = 47,
+                height = 15,
+                color = STEELBLUE,
             ),
+            width = 45,
+            height = 15,
+        ),
     ]
 
     screen2_columns_1 = render.Row(
         children = [
             render.Box(
-                child=render.Column(
+                child = render.Column(
                     # pvPowerMax
                     children = screen_2_1_1,
                     main_align = "center",
                     cross_align = "center",
                 ),
-                width=15,
-                height=15,
+                width = 15,
+                height = 15,
             ),
             render.Column(
                 children = [render.Box(width = 1, height = 16, color = GREY)],
@@ -385,19 +385,18 @@ def main(config):
     screen2_columns_2 = render.Row(
         children = [
             render.Box(
-                child=render.Column(
+                child = render.Column(
                     # chargePowerMax
                     children = screen_2_1_2,
                     main_align = "center",
                     cross_align = "center",
                 ),
-                width=15,
-                height=15,
+                width = 15,
+                height = 15,
             ),
             render.Column(
                 children = [render.Box(width = 1, height = 32, color = GREY)],
             ),
-
             render.Column(
                 # chargePowerSeries
                 children = screen_2_2_2,
@@ -414,11 +413,11 @@ def main(config):
             screen2_columns_1,
             render.Column(
                 children = [render.Box(width = 64, height = 1, color = GREY)],
-            ), 
-            screen2_columns_2
-        ]
+            ),
+            screen2_columns_2,
+        ],
     )
-    
+
     variant = config.str("variant", DEFAULT_VARIANT)
     print("variant=" + variant)
     if variant == "screen_1":
@@ -457,7 +456,7 @@ def getgridPowerSeries(dbhost, defaults, api_key):
     #print ("query=" + fluxql)
     return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
-def getMaxValue(dbhost, measurement, defaults, api_key):
+def getMaxValue(measurement, dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: today()) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
@@ -471,7 +470,7 @@ def getMaxValue(dbhost, measurement, defaults, api_key):
     print("%sMax = %s" % (measurement, value))
     return int(value)
 
-def getLastValue(dbhost, measurement, defaults, api_key):
+def getLastValue(measurement, dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -1m) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
@@ -551,8 +550,6 @@ def humanize(number):
     else:
         rounded_number = custom_round(number / 1000, 1)
         return str(rounded_number) + "k"
-
-
 
 options_screen = [
     schema.Option(
