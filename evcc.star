@@ -6,11 +6,11 @@ Author: cruschke
 """
 
 load("cache.star", "cache")
-load("encoding/csv.star", "csv")
 load("encoding/base64.star", "base64")
+load("encoding/csv.star", "csv")
 load("encoding/json.star", "json")
 load("http.star", "http")
-load("humanize.star", "humanize")
+load("math.star", "math")
 load("render.star", "render")
 load("schema.star", "schema")
 load("time.star", "time")
@@ -199,14 +199,14 @@ def main(config):
             (48, 0.0),
         ]
         gridPowerSeries = chargePowerSeries
-        chargePowerLast = 3600
-        chargePowerMax = "2.5k"
+        chargePowerLast = 2400
+        chargePowerMax = 2599
         gridPowerLast = 685
         gridPowerMax = 1000
         homePowerLast = 0
         phasesActive = 0
         pvPowerLast = 2964
-        pvPowerMax = "6.3k"
+        pvPowerMax = 6577
         vehicleSocLast = 80
 
     else:
@@ -255,7 +255,7 @@ def main(config):
         # this is the PV power column
         render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(pvPowerLast), color = YELLOWGREEN),
+        render.Text(humanize(pvPowerLast), color = YELLOWGREEN),
         render.Box(width = 1, height = 2, color = BLACK),
         #render.Text(str(pvPowerMax), color = YELLOW, font = FONT),
     ]
@@ -263,7 +263,7 @@ def main(config):
         # this is the grid power column
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(str(abs(gridPowerLast)), color = col2_color),  # abs() because I don't want to report negative numbers, thats why we have the color coding
+        render.Text(humanize(abs(gridPowerLast)), color = col2_color),  # abs() because I don't want to report negative numbers, thats why we have the color coding
         render.Box(width = 1, height = 2, color = BLACK),
         #render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
     ]
@@ -278,7 +278,7 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(str(chargePowerLast), color = STEELBLUE, font = FONT),
+        render.Text(humanize(chargePowerLast), color = STEELBLUE, font = FONT),
         render.Box(width = 1, height = 2, color = BLACK),
         render.Text(str(vehicleSocLast) + "%", color = WHITE, font = FONT),
     ]
@@ -317,12 +317,12 @@ def main(config):
     
     # pvPowerMax
     screen_2_1_1 = [
-        render.Text(str(pvPowerMax), color = YELLOWGREEN, font = FONT),
+        render.Text(humanize(pvPowerMax), color = YELLOWGREEN, font = FONT),
     ]
 
     # chargePowerMax
     screen_2_1_2 = [
-        render.Text(str(chargePowerMax),color = STEELBLUE, font = FONT),
+        render.Text(humanize(chargePowerMax),color = STEELBLUE, font = FONT),
     ]
 
     # pvPowerSeries
@@ -544,6 +544,25 @@ def csv2touples(csvinput):
 
     #print(result)
     return result
+
+# created by ChatGPT
+def custom_round(number, decimal_places):
+    """
+    Custom rounding function to round a number to a specified number of decimal places.
+    """
+    return int((number * (10 * decimal_places)) + 0.5) / (10 * decimal_places)
+
+def humanize(number):
+    """
+    Convert an integer to a human-readable format.
+    """
+    if number < 1000:
+        return str(number)
+    else:
+        rounded_number = custom_round(number / 1000, 1)
+        return str(rounded_number) + "k"
+
+
 
 options_screen = [
     schema.Option(
