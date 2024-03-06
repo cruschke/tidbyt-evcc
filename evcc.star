@@ -23,7 +23,6 @@ DEFAULT_LOCATION = {
     "locality": "Weltzeituhr Alexanderplatz",
 }
 DEFAULT_TIMEZONE = "Europe/Berlin"
-DEFAULT_GRIDPOWERSCALE = 0
 
 INFLUXDB_HOST_DEFAULT = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 
@@ -82,10 +81,6 @@ def main(config):
     location = config.get("location")
     loc = json.decode(location) if location else DEFAULT_LOCATION
     timezone = loc.get("timezone", DEFAULT_TIMEZONE)
-    if config.str("scale_gridPower"):  # make sure its set and not None
-        scale_gridPower = int(config.str("scale_gridPower"))
-    else:
-        scale_gridPower = DEFAULT_GRIDPOWERSCALE
 
     # some FluxQL query parameters that every single query needs
     flux_defaults = '                                                     \
@@ -317,9 +312,11 @@ def main(config):
     # the screen2 main columns
     ############################################################
 
-    # pvPowerMax
+     # pvPowerMax + gridPowerMax
     screen_2_1_1 = [
         render.Text(humanize(pvPowerMax), color = YELLOWGREEN, font = FONT),
+        render.Box(width = 5, height = 1), # some extra space
+        render.Text(humanize(gridPowerMax), color = FIREBRICK, font = FONT),
     ]
 
     # chargePowerMax
@@ -360,7 +357,7 @@ def main(config):
         children = [
             render.Box(
                 child = render.Column(
-                    # pvPowerMax
+                    # pvPowerMax + gridPowerMax
                     children = screen_2_1_1,
                     main_align = "center",
                     cross_align = "center",
@@ -619,13 +616,6 @@ def get_schema():
                 icon = "display",
                 default = DEFAULT_VARIANT,
                 options = options_screen,
-            ),
-            schema.Text(
-                id = "scale_gridPower",
-                name = "gridPower scale",
-                desc = "the maximum expected value for gridPower, required for nice graphing. Set to 0 for autoscaling.",
-                icon = "up-right-and-down-left-from-center",
-                default = str(DEFAULT_GRIDPOWERSCALE),
             ),
         ],
     )
