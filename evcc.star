@@ -31,27 +31,16 @@ TTL_FOR_MAX = 60  # how often the max values are being refreshed
 TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are being refreshed
 
 # COLOR DEFINITIONS
-BLACK = "#000"
-BLUE = "#00F"
 
-DARK_GREEN = "#062E03"
-GREEN = "#0F0"
+BLACK = "#000"
+FIREBRICK = "E1121F"
 GREY = "#1A1A1A"
 RED = "#F00"
+STEELBLUE = "39A2E4"
+SUNGLOW = "FFCA3A"
 WHITE = "#FFF"
 YELLOW = "#FF0"
-
-BARNRED = "780000"
-FIREBRICK = "C1121F"
-PAPAYAWHIP = "FDF0D5"
-PRUSSIANBLUE = "003049"
-AIRSUPERIORITYBLUE = "669BBC"
-
-BITTERSWEET = "FF595E"
-SUNGLOW = "FFCA3A"
-YELLOWGREEN = "8AC926"
-STEELBLUE = "1982C4"
-ULTRAVIOLET = "6A4C93"
+YELLOWGREEN = "AAE926"
 
 FONT = "tom-thumb"
 
@@ -231,15 +220,15 @@ def main(config):
         col2_icon = GRID_ICON
         col2_color = FIREBRICK
 
-    col3_phase1 = DARK_GREEN
-    col3_phase2 = DARK_GREEN
-    col3_phase3 = DARK_GREEN
+    col3_phase1 = YELLOWGREEN
+    col3_phase2 = YELLOWGREEN
+    col3_phase3 = YELLOWGREEN
     if phasesActive >= 1:
-        col3_phase1 = GREEN
+        col3_phase1 = YELLOWGREEN
     if phasesActive >= 2:
-        col3_phase2 = GREEN
+        col3_phase2 = YELLOWGREEN
     if phasesActive >= 3:
-        col3_phase3 = GREEN
+        col3_phase3 = YELLOWGREEN
     else:  # no charging or error case
         col3_phase1 = RED
         col3_phase2 = RED
