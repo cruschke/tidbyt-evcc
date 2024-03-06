@@ -202,11 +202,11 @@ def main(config):
         chargePowerLast = 2400
         chargePowerMax = 2599
         gridPowerLast = 685
-        gridPowerMax = 1000
+        gridPowerMax = 12766
         homePowerLast = 0
         phasesActive = 0
         pvPowerLast = 2964
-        pvPowerMax = 6577
+        pvPowerMax = 16577
         vehicleSocLast = 80
 
     else:
@@ -539,7 +539,10 @@ def custom_round(number, decimal_places):
     """
     Custom rounding function to round a number to a specified number of decimal places.
     """
-    return int((number * (10 * decimal_places)) + 0.5) / (10 * decimal_places)
+    if decimal_places == 0:
+        return int(number)
+    else:
+        return int((number * (10 * decimal_places)) + 0.5) / (10 * decimal_places)
 
 def humanize(number):
     """
@@ -547,6 +550,9 @@ def humanize(number):
     """
     if number < 1000:
         return str(number)
+    elif number > 10000:
+        rounded_number = custom_round(number / 1000, 0)
+        return str(rounded_number) + "k"  
     else:
         rounded_number = custom_round(number / 1000, 1)
         return str(rounded_number) + "k"
