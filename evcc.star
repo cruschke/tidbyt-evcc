@@ -33,6 +33,7 @@ TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are 
 # COLOR DEFINITIONS
 
 BLACK = "#000"
+DARK_GREEN = "#062E03"
 FIREBRICK = "E1121F"
 GREY = "#1A1A1A"
 RED = "#F00"
@@ -203,7 +204,8 @@ def main(config):
         phasesActive = getLastValue("phasesActive", influxdb_host, flux_defaults, api_key)
         pvPowerLast = getLastValue("pvPower", influxdb_host, flux_defaults, api_key)
         pvPowerMax = getMaxValue("pvPower", influxdb_host, flux_defaults, api_key)
-        vehicleSocLast = getLastValue("vehicleSoc", influxdb_host, flux_defaults, api_key)
+        vehicleSocLast = getLastValueCar("vehicleSoc", "Hurvinek", influxdb_host, flux_defaults, api_key)
+        vehicleRangeLast = getLastValueCar("vehicleRange", "Hurvinek", influxdb_host, flux_defaults, api_key)
 
         # the time series for the plots
         chargePowerSeries = getSeries("chargePower", influxdb_host, flux_defaults, api_key)
@@ -220,9 +222,9 @@ def main(config):
         col2_icon = GRID_ICON
         col2_color = FIREBRICK
 
-    col3_phase1 = YELLOWGREEN
-    col3_phase2 = YELLOWGREEN
-    col3_phase3 = YELLOWGREEN
+    col3_phase1 = DARK_GREEN
+    col3_phase2 = DARK_GREEN
+    col3_phase3 = DARK_GREEN
     if phasesActive >= 1:
         col3_phase1 = YELLOWGREEN
     if phasesActive >= 2:
@@ -253,6 +255,20 @@ def main(config):
         render.Box(width = 1, height = 2, color = BLACK),
         #render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
     ]
+
+    if chargePowerLast == 0:
+        str_chargePowerLast = "*"
+    else:
+        str_chargePowerLast = humanize(chargePowerLast) 
+
+
+    if vehicleSocLast == 0:
+        str_vehicleSocLast = "*"
+    else:
+        str_vehicleSocLast = str(vehicleSocLast) + "%"
+    
+
+
     screen_1_3 = [
         # this is the car charging column
         render.Image(src = CAR_ICON),
@@ -264,9 +280,9 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(humanize(chargePowerLast), color = STEELBLUE, font = FONT),
+        render.Text(str_chargePowerLast, color = STEELBLUE, font = FONT),
         render.Box(width = 1, height = 2, color = BLACK),
-        render.Text(str(vehicleSocLast) + "%", color = WHITE, font = FONT),
+        render.Text(str_vehicleSocLast, color = WHITE, font = FONT),
     ]
 
     screen_1 = render.Row(
@@ -461,6 +477,22 @@ def getLastValue(measurement, dbhost, defaults, api_key):
         |> range(start: -1m) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
         |> group() \
+        |> last() \
+        |> toInt() \
+        |> keep(columns: ["_value"])'
+
+    data = csv.read_all(readInfluxDB(dbhost, fluxql, api_key, TTL_FOR_LAST))
+    value = data[1][3] if len(data) > 0 else "0"
+    print("%sLast = %s" % (measurement, value))
+    return int(value)
+
+# TODO revert back to 1min
+# TODO make vehicle a parameter
+# TODO make loadpoint a parameter
+def getLastValueCar(measurement, vehicle, dbhost, defaults, api_key):
+    fluxql = defaults + ' \
+        |> range(start: -12h) \
+        |> filter(fn: (r) => r._measurement == "' + measurement + '"  and r.vehicle == "' + vehicle + '" and r._value > 0) \
         |> last() \
         |> toInt() \
         |> keep(columns: ["_value"])'

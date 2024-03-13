@@ -47,6 +47,29 @@ Use the InfluxDB "Data Explorer" to verify evcc is able to send metrics.
 
 You should see some query results matching the statistics of your evcc installation.
 
+# Using the app
+
+* three-columns screen
+  * single values -  the last known value 
+* graphs screen
+  * single values-  the max value in the last 12 hours
+  * graphing the last 12 hours mean value over an aggregate window of 15 minutes
+
+## InfluxDB measurements taken into consideration
+
+TODO: check if all are used
+
+|metric|description|
+| -------- | ------- |
+|gridPower|Current grid feed-in (green) or consumption (red)|
+|chargePower|Current charging power|
+|homePower|Current house consumption power (without wallbox consumption)|
+|phasesActive|Currently active number of current phases of the charging point|
+|pvPower|Current solar system output|
+|vehicleSoc|Current vehicle state of charge (Soc) in percent|
+
+For more details on measurements check out the [evcc  messaging](https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md) documentation.
+
 # Credits
 
 Icons from [FLATICON](https://www.flaticon.com/)
