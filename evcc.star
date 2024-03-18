@@ -10,7 +10,7 @@ load("encoding/base64.star", "base64")
 load("encoding/csv.star", "csv")
 load("encoding/json.star", "json")
 load("http.star", "http")
-#load("math.star", "math")
+load("math.star", "math")
 load("render.star", "render")
 load("schema.star", "schema")
 load("time.star", "time")
@@ -231,10 +231,6 @@ def main(config):
         col3_phase2 = YELLOWGREEN
     if phasesActive >= 3:
         col3_phase3 = YELLOWGREEN
-    else:  # no charging or error case
-        col3_phase1 = RED
-        col3_phase2 = RED
-        col3_phase3 = RED
 
     ############################################################
     # the screen1 main columns
@@ -256,12 +252,6 @@ def main(config):
         #render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
     ]
 
-    if chargePowerLast == 0:
-        str_chargePowerLast = "*"
-    else:
-        str_chargePowerLast = humanize(chargePowerLast) 
-
-
     if vehicleSocLast == 0:
         str_vehicleSocLast = "*"
     else:
@@ -280,7 +270,7 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(str_chargePowerLast, color = STEELBLUE, font = FONT),
+        render.Text(humanize(chargePowerLast) , color = STEELBLUE, font = FONT),
         render.Box(width = 1, height = 2, color = BLACK),
         render.Text(str_vehicleSocLast, color = WHITE, font = FONT),
     ]
@@ -552,28 +542,25 @@ def csv2touples(csvinput):
     #print(result)
     return result
 
-# created by ChatGPT
-def custom_round(number, decimal_places):
-    """
-    Custom rounding function to round a number to a specified number of decimal places.
-    """
-    if decimal_places == 0:
-        return int(number)
+def custom_round(number):
+    integer_part = number // 1000
+    remainder = number % 1000
+    if remainder == 0:
+        return str(integer_part) + "k"
     else:
-        return int((number * (10 * decimal_places)) + 0.5) / (10 * decimal_places)
+        # Manually round to nearest thousand
+        if remainder >= 500:
+            integer_part += 1
+        return str(integer_part) + "k"
 
 def humanize(number):
-    """
-    Convert an integer to a human-readable format.
-    """
-    if number < 1000:
+    print("number=" + str(number))
+    if number < 10000:
         return str(number)
-    elif number > 10000:
-        rounded_number = custom_round(number / 1000, 0)
-        return str(rounded_number) + "k"  
     else:
-        rounded_number = custom_round(number / 1000, 1)
-        return str(rounded_number) + "k"
+        rounded_number =custom_round(number)
+        print("rounded_number=" + str(rounded_number))
+        return str(rounded_number)
 
 options_screen = [
     schema.Option(
