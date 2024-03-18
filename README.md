@@ -70,6 +70,16 @@ TODO: check if all are used
 
 For more details on measurements check out the [evcc  messaging](https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md) documentation.
 
+# open issues
+* make up my mind if gridPower or homePower should be plotted
+* error handling (like wrong API key) is very basic
+* improving the icons
+  * animated car when the car is charging  
+  * the second column icon depends on whether I produce more solar energy or if I take it from grid, need to make up my mind what icons to present
+  * better icons in general
+ * the elephant in the room: publishing the app to the [community apps](https://tidbyt.dev/docs/publish/community-apps) store
+
+
 # Credits
 
 Icons from [FLATICON](https://www.flaticon.com/)
