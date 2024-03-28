@@ -10,10 +10,8 @@ load("encoding/base64.star", "base64")
 load("encoding/csv.star", "csv")
 load("encoding/json.star", "json")
 load("http.star", "http")
-load("math.star", "math")
 load("render.star", "render")
 load("schema.star", "schema")
-load("time.star", "time")
 
 DEFAULT_BUCKET = "evcc"
 DEFAULT_VARIANT = "screen_1"
@@ -131,58 +129,6 @@ def main(config):
             (48, 0.0),
         ]
 
-        # TODO generate a realistic power pvPowerSeries series
-        pvPowerSeries = [
-            (0, 0.0),
-            (1, 0.0),
-            (2, 5.0),
-            (3, 10.0),
-            (4, 12.0),
-            (5, 12.0),
-            (6, 5.0),
-            (7, 5.0),
-            (8, 5.0),
-            (9, -5.0),
-            (10, -5.0),
-            (11, -10.0),
-            (12, -8.0),
-            (13, .0),
-            (14, 10.0),
-            (15, 12.0),
-            (16, 14.0),
-            (17, 15.0),
-            (18, 0.0),
-            (19, 0.0),
-            (20, 0.0),
-            (21, 0.0),
-            (22, 0.0),
-            (23, 0.0),
-            (24, 0.0),
-            (25, 0.0),
-            (26, 0.0),
-            (27, 0.0),
-            (28, 0.0),
-            (29, 0.0),
-            (30, 0.0),
-            (31, 0.0),
-            (32, 0.0),
-            (33, 0.0),
-            (34, 0.0),
-            (35, 0.0),
-            (36, 0.0),
-            (37, 0.0),
-            (38, 0.0),
-            (39, 0.0),
-            (40, 0.0),
-            (41, 0.0),
-            (42, 0.0),
-            (43, 0.0),
-            (44, 0.0),
-            (45, 0.0),
-            (46, 0.0),
-            (47, 0.0),
-            (48, 0.0),
-        ]
         gridPowerSeries = chargePowerSeries
         chargePowerLast = 10700
         chargePowerMax = 2599
@@ -205,12 +151,11 @@ def main(config):
         pvPowerLast = getLastValue("pvPower", influxdb_host, flux_defaults, api_key)
         pvPowerMax = getMaxValue("pvPower", influxdb_host, flux_defaults, api_key)
         vehicleSocLast = getLastValueCar("vehicleSoc", "Hurvinek", influxdb_host, flux_defaults, api_key)
-        vehicleRangeLast = getLastValueCar("vehicleRange", "Hurvinek", influxdb_host, flux_defaults, api_key)
+        vehicleRangeLast = getLastValueCar("vehicleRange", "Hurvinek", influxdb_host, flux_defaults, api_key)  # buildifier: disable=unused-variable
 
         # the time series for the plots
         chargePowerSeries = getSeries("chargePower", influxdb_host, flux_defaults, api_key)
         gridPowerSeries = getgridPowerSeries(influxdb_host, flux_defaults, api_key)
-        pvPowerSeries = getSeries("pvPower", influxdb_host, flux_defaults, api_key)
 
     # the main display
 
@@ -256,8 +201,6 @@ def main(config):
         str_vehicleSocLast = "*"
     else:
         str_vehicleSocLast = str(vehicleSocLast) + "%"
-    
-
 
     screen_1_3 = [
         # this is the car charging column
@@ -270,7 +213,7 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(humanize(chargePowerLast) , color = STEELBLUE, font = FONT),
+        render.Text(humanize(chargePowerLast), color = STEELBLUE, font = FONT),
         render.Box(width = 1, height = 2, color = BLACK),
         render.Text(str_vehicleSocLast, color = WHITE, font = FONT),
     ]
@@ -307,10 +250,10 @@ def main(config):
     # the screen2 main columns
     ############################################################
 
-     # pvPowerMax + gridPowerMax
+    # pvPowerMax + gridPowerMax
     screen_2_1_1 = [
         render.Text(humanize(pvPowerMax), color = YELLOWGREEN, font = FONT),
-        render.Box(width = 5, height = 1), # some extra space
+        render.Box(width = 5, height = 1),  # some extra space
         render.Text(humanize(gridPowerMax), color = FIREBRICK, font = FONT),
     ]
 
@@ -319,7 +262,7 @@ def main(config):
         render.Text(humanize(chargePowerMax), color = STEELBLUE, font = FONT),
     ]
 
-    # pvPowerSeries
+    # gridPowerSeries
     screen_2_2_1 = [
         render.Box(
             child = render.Plot(
@@ -518,7 +461,6 @@ def readInfluxDB(dbhost, query, api_key, ttl):
     # check if the request was successful
     if rep.status_code != 200:
         fail("InfluxDB API request failed with status {}".format(rep.status_code))
-        return None  # TODO: proper error handling
     cache.set(key, base64.encode(rep.body()), ttl_seconds = ttl)
 
     return rep.body()
@@ -558,7 +500,8 @@ def humanize(number):
     if number < 10000:
         return str(number)
     else:
-        rounded_number =custom_round(number)
+        rounded_number = custom_round(number)
+
         #print("rounded_number=" + str(rounded_number))
         return str(rounded_number)
 
