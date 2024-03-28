@@ -184,15 +184,15 @@ def main(config):
             (48, 0.0),
         ]
         gridPowerSeries = chargePowerSeries
-        chargePowerLast = 2400
+        chargePowerLast = 10700
         chargePowerMax = 2599
-        gridPowerLast = 685
+        gridPowerLast = 1685
         gridPowerMax = 12766
         homePowerLast = 0
         phasesActive = 0
-        pvPowerLast = 2964
-        pvPowerMax = 16577
-        vehicleSocLast = 80
+        pvPowerLast = 5964
+        pvPowerMax = 7577
+        vehicleSocLast = 77
 
     else:
         # individual queries for the values
@@ -554,12 +554,12 @@ def custom_round(number):
         return str(integer_part) + "k"
 
 def humanize(number):
-    print("number=" + str(number))
+    #print("number=" + str(number))
     if number < 10000:
         return str(number)
     else:
         rounded_number =custom_round(number)
-        print("rounded_number=" + str(rounded_number))
+        #print("rounded_number=" + str(rounded_number))
         return str(rounded_number)
 
 options_screen = [
