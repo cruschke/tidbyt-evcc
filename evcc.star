@@ -353,12 +353,17 @@ def main(config):
         ],
     )
 
-    variant = config.str("variant", DEFAULT_VARIANT)
-    print("variant=" + variant)
-    if variant == "screen_1":
-        return render.Root(screen_1)
-    else:
-        return render.Root(screen_2)
+    return render.Root(
+        delay = 7 * 1000,
+        show_full_animation = True,
+        child = render.Column(
+            children = [
+                render.Animation(
+                    children = [screen_1, screen_2],
+                ),
+            ],
+        ),
+    )
 
 # https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md?plain=1#L156
 # grid power - Current grid feed-in(-) or consumption(+) in watts (__float__)
