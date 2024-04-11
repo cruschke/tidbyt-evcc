@@ -14,7 +14,6 @@ load("render.star", "render")
 load("schema.star", "schema")
 
 DEFAULT_BUCKET = "evcc"
-DEFAULT_VARIANT = "screen_1"
 DEFAULT_LOCATION = {
     "lat": 52.52136203907116,
     "lng": 13.413308033057413,
@@ -64,6 +63,7 @@ def main(config):
     # read the configuration
     influxdb_host = config.str("influxdb", INFLUXDB_HOST_DEFAULT)
     api_key = config.str("api_key", "UNDEFINED")
+    vehicle = config.str("vehicle", "mycar")
     bucket = config.get("bucket", DEFAULT_BUCKET)
 
     location = config.get("location")
@@ -150,8 +150,8 @@ def main(config):
         phasesActive = getLastValue("phasesActive", influxdb_host, flux_defaults, api_key)
         pvPowerLast = getLastValue("pvPower", influxdb_host, flux_defaults, api_key)
         pvPowerMax = getMaxValue("pvPower", influxdb_host, flux_defaults, api_key)
-        vehicleSocLast = getLastValueCar("vehicleSoc", "Hurvinek", influxdb_host, flux_defaults, api_key)
-        vehicleRangeLast = getLastValueCar("vehicleRange", "Hurvinek", influxdb_host, flux_defaults, api_key)  # buildifier: disable=unused-variable
+        vehicleSocLast = getLastValueCar("vehicleSoc", vehicle, influxdb_host, flux_defaults, api_key)
+        vehicleRangeLast = getLastValueCar("vehicleRange", vehicle, influxdb_host, flux_defaults, api_key)  # buildifier: disable=unused-variable
 
         # the time series for the plots
         chargePowerSeries = getSeries("chargePower", influxdb_host, flux_defaults, api_key)
@@ -559,19 +559,19 @@ def get_schema():
                 icon = "database",
                 default = "evcc",
             ),
+            schema.Text(
+                id = "vehicle",
+                name = "vehicle name",
+                desc = "The vehicle you want to display",
+                icon = "car",
+                default = "mycar",
+            ),
             schema.Location(
                 id = "location",
                 name = "Location",
                 desc = "Your device location",
                 icon = "locationDot",
             ),
-            schema.Dropdown(
-                id = "variant",
-                name = "display variant",
-                desc = "Which variant to display",
-                icon = "display",
-                default = DEFAULT_VARIANT,
-                options = options_screen,
-            ),
+            
         ],
     )
