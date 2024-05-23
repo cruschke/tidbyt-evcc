@@ -83,10 +83,6 @@ iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAASElEQVR4Aa1SQQoAIAgb0gf7/7GHGB08
 
 ####
 
-CAR_CHARGING = base64.decode("""
-R0lGODlhDgAOAPEAAAAAAP///xXoEQAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQByAAAACwAAAAADgAOAAACIYSPecGtEFREU9IHjXu7+Q19Yjh52ncyqchGrUlKapw4BQAh+QQByAAAACwAAAAADgAOAAACJISPecGtEFREU9IHjXu7+Q19Yjh52ncyqchGrQkIsiILRk3PBQAh+QQByAAAACwAAAAADgAOAAACJoSPecGtEFREU9IHjXu7+Q19Yjh52ncyqcC2rgu8smC0ih2zt14AACH5BAHIAAAALAAAAAAOAA4AAAImhI95wa0QVERT0geNe7v5DX0iIJRGaZJoup7rCwtqjLpyUs9KXQAAIfkEAcgAAAAsAAAAAA4ADgAAAiSEj3nBrRBURFPSB417W/gPHuD4AaV5kkaIkq7XvsIKJ2mNlAUAIfkEAcgAAAAsAAAAAA4ADgAAAiSEj3nBrRBURFPSB43YeAvthRwoioBHfqe5juUbtrCKJnWNoAUAIfkEAcgAAAAsAAAAAA4ADgAAAiSEj3nBrRBUROKBerDCotvOgaJnjGYFluk1quQJe/G6Ui9pVwUAIfkEAcgAAAAsAAAAAA4ADgAAAiGEj3nCrSBURFPSB417u/kNfWI4edp3MqnIRq1JSmqcOAUAOw==
-""")
-
 PANEL_ICON = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAnmVYSWZNTQAqAAAACAAGARIAAwAAAAEAAQAAARoABQAAAAEAAABWARsABQAAAAEAAABeASgAAwAAAAEAAgAAATEAAgAAABoAAABmh2kABAAAAAEAAACAAAAAAAAAAEgAAAABAAAASAAAAAFQaXhlbG1hdG9yIFBybyBEZW1vIDIuMC42AAACoAIABAAAAAEAAAAOoAMABAAAAAEAAAAOAAAAAM2nMk0AAAAJcEhZcwAACxMAAAsTAQCanBgAAANsaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA2LjAuMCI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjE0PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjE0PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5QaXhlbG1hdG9yIFBybyBEZW1vIDIuMC42PC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMjQtMDItMTFUMTY6MDk6NThaPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyMDAwMC8xMDAwMDwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CpdATFoAAADSSURBVCgVxVAxEgFBENxVZHxAooiQE3jAlYBQxgXKHzzHN7zAFygXSXzgSE6wutVObVPy66q+6Z7dneob52pBCCEHDU+ItZmo2TPkDNmISZeS+Aw9Fj+CvohfUHt+MGqO0qEG7uAL7NEAN7AFdmmA0nt/5KOpZYh1j1pI7wrNnmLCqNlnTvoUkP1k3QCaPUXmMUZj8vAEzvTWn17JqJVk4PY24k1yyw8zqBWj8scN3OjQjNTfzeobuQaJqSvyu5tcM8mk8GALt2MHuo31H9JpXeoNjHW8AvqRh98AAAAASUVORK5CYII=
 """)
@@ -116,116 +112,17 @@ def main(config):
         from(bucket:"' + bucket + '")'
 
     if api_key == "UNDEFINED":
-        gridPowerSeries = [
-            (0, 200),    # 4:00 am - 4:15 am
-            (1, 220),    # 4:15 am - 4:30 am
-            (2, 210),    # 4:30 am - 4:45 am
-            (3, 230),    # 4:45 am - 5:00 am
-            (4, 250),    # 5:00 am - 5:15 am
-            (5, 260),    # 5:15 am - 5:30 am
-            (6, 280),    # 5:30 am - 5:45 am
-            (7, 300),    # 5:45 am - 6:00 am
-            (8, 350),    # 6:00 am - 6:15 am
-            (9, 400),    # 6:15 am - 6:30 am
-            (10, 450),   # 6:30 am - 6:45 am
-            (11, 500),   # 6:45 am - 7:00 am
-            (12, 800),   # 7:00 am - 7:15 am (breakfast preparation)
-            (13, 1000),  # 7:15 am - 7:30 am (breakfast cooking)
-            (14, 1200),  # 7:30 am - 7:45 am (breakfast cooking)
-            (15, 1400),  # 7:45 am - 8:00 am (breakfast cooking)
-            (16, 1600),  # 8:00 am - 8:15 am
-            (17, 1800),  # 8:15 am - 8:30 am
-            (18, 2000),  # 8:30 am - 8:45 am
-            (19, 2200),  # 8:45 am - 9:00 am
-            (20, 1800),  # 9:00 am - 9:15 am
-            (21, 1600),  # 9:15 am - 9:30 am
-            (22, 1400),  # 9:30 am - 9:45 am
-            (23, 1200),  # 9:45 am - 10:00 am
-            (24, 1000),  # 10:00 am - 10:15 am
-            (25, 900),   # 10:15 am - 10:30 am
-            (26, 850),   # 10:30 am - 10:45 am
-            (27, 800),   # 10:45 am - 11:00 am
-            (28, 750),   # 11:00 am - 11:15 am
-            (29, 700),   # 11:15 am - 11:30 am
-            (30, 680),   # 11:30 am - 11:45 am
-            (31, 650),   # 11:45 am - 12:00 pm
-            (32, 2000),  # 12:00 pm - 12:15 pm (lunch preparation)
-            (33, 3000),  # 12:15 pm - 12:30 pm (lunch cooking)
-            (34, 2500),  # 12:30 pm - 12:45 pm (lunch cooking)
-            (35, 2000),  # 12:45 pm - 1:00 pm (lunch cooking)
-            (36, 1500),  # 1:00 pm - 1:15 pm
-            (37, 1200),  # 1:15 pm - 1:30 pm
-            (38, 1000),  # 1:30 pm - 1:45 pm
-            (39, 900),   # 1:45 pm - 2:00 pm
-            (40, 850),   # 2:00 pm - 2:15 pm
-            (41, 800),   # 2:15 pm - 2:30 pm
-            (42, 750),   # 2:30 pm - 2:45 pm
-            (43, 700),   # 2:45 pm - 3:00 pm
-            (44, 680),   # 3:00 pm - 3:15 pm
-            (45, 650),   # 3:15 pm - 3:30 pm
-            (46, 620),   # 3:30 pm - 3:45 pm
-            (47, 600),   # 3:45 pm - 4:00 pm
-        ]
+        gridPowerSeries = [(0, 382.5), (1, 437.3), (2, 142.13333333333333), (3, 907.15), (4, 758.7142857142857), (5, 632.3333333333334), (6, -0.0), (7, 745.3333333333334), (8, 674.7692307692307), (9, 781.7333333333333), (10, 985.5333333333333), (11, 547.2666666666667), (12, 967.9666666666667), (13, 1043.1333333333334), (14, 604.5333333333333), (15, 2709.409090909091), (16, 2267.9666666666667), (17, 1763.4), (18, -142.76666666666668), (19, 179.60714285714286), (20, 546.2962962962963), (21, 387.6666666666667), (22, 287.6896551724138), (23, 409.2413793103448), (24, 166.86666666666667), (25, 297.6333333333333), (26, -571.5666666666667), (27, 180.46666666666667), (28, 387.76666666666665), (29, 1046.4666666666667), (30, 1674.4333333333334), (31, 2046.5333333333333), (32, 844.3666666666667), (33, 1942.5), (34, 765.7666666666667), (35, 551.4333333333333), (36, 710.4666666666667), (37, 384.3333333333333), (38, -36.166666666666664), (39, 213.86666666666667), (40, -1974.8666666666666), (41, -1451.0333333333333), (42, -1165.8666666666666), (43, -614.5), (44, -20.566666666666666), (45, -223.6), (46, -211.66666666666666), (47, -308.8333333333333), (48, -300.7857142857143)]
+        chargePowerSeries = [(0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), (8, 0.0), (9, 0.0), (10, 0.0), (11, 0.0), (12, 0.0), (13, 0.0), (14, 0.0), (15, 0.0), (16, 0.0), (17, 0.0), (18, 0.0), (19, 0.0), (20, 812.1333328386148), (21, 1973.1000224749248), (22, 3367.1851599657975), (23, 3514.0999952952066), (24, 3320.827603340149), (25, 3503.333361943563), (26, 2691.6333754857383), (27, 2979.0666898091636), (28, 2185.4999780654907), (29, 2787.9666646321616), (30, 1790.7666504383087), (31, 0.0), (32, 0.0), (33, 0.0), (34, 0.0), (35, 0.0), (36, 0.0), (37, 0.0), (38, 0.0), (39, 0.0), (40, 0.0), (41, 0.0), (42, 0.0), (43, 0.0), (44, 0.0), (45, 0.0), (46, 0.0), (47, 0.0), (48, 0.0)]
 
-        chargePowerSeries = [
-            (0, 0),      # 4:00 am - 4:15 am
-            (1, 0),      # 4:15 am - 4:30 am
-            (2, 0),      # 4:30 am - 4:45 am
-            (3, 0),      # 4:45 am - 5:00 am
-            (4, 0),      # 5:00 am - 5:15 am
-            (5, 0),      # 5:15 am - 5:30 am
-            (6, 0),      # 5:30 am - 5:45 am
-            (7, 0),      # 5:45 am - 6:00 am
-            (8, 0),      # 6:00 am - 6:15 am
-            (9, 0),      # 6:15 am - 6:30 am
-            (10, 0),     # 6:30 am - 6:45 am
-            (11, 0),     # 6:45 am - 7:00 am
-            (12, 0),     # 7:00 am - 7:15 am
-            (13, 0),     # 7:15 am - 7:30 am
-            (14, 0),     # 7:30 am - 7:45 am
-            (15, 0),     # 7:45 am - 8:00 am
-            (16, 0),     # 8:00 am - 8:15 am
-            (17, 0),     # 8:15 am - 8:30 am
-            (18, 0),     # 8:30 am - 8:45 am
-            (19, 0),     # 8:45 am - 9:00 am
-            (20, 0),     # 9:00 am - 9:15 am
-            (21, 0),     # 9:15 am - 9:30 am
-            (22, 0),     # 9:30 am - 9:45 am
-            (23, 0),     # 9:45 am - 10:00 am
-            (24, 0),     # 10:00 am - 10:15 am
-            (25, 0),     # 10:15 am - 10:30 am
-            (26, 0),     # 10:30 am - 10:45 am
-            (27, 0),     # 10:45 am - 11:00 am
-            (28, 0),     # 11:00 am - 11:15 am
-            (29, 0),     # 11:15 am - 11:30 am
-            (30, 0),     # 11:30 am - 11:45 am
-            (31, 0),     # 11:45 am - 12:00 pm
-            (32, 0),     # 12:00 pm - 12:15 pm (PV excess used for lunch preparation)
-            (33, 2000),  # 12:15 pm - 12:30 pm (PV excess used for lunch cooking)
-            (34, 1500),  # 12:30 pm - 12:45 pm (PV excess used for lunch cooking)
-            (35, 2000),  # 12:45 pm - 1:00 pm (PV excess used for lunch cooking)
-            (36, 3500),  # 1:00 pm - 1:15 pm (EV charging)
-            (37, 3600),  # 1:15 pm - 1:30 pm (EV charging)
-            (38, 3500),  # 1:30 pm - 1:45 pm (EV charging)
-            (39, 3300),  # 1:45 pm - 2:00 pm (EV charging)
-            (40, 3000),  # 2:00 pm - 2:15 pm (EV charging)
-            (41, 2700),  # 2:15 pm - 2:30 pm (EV charging)
-            (42, 2500),  # 2:30 pm - 2:45 pm (EV charging)
-            (43, 2300),  # 2:45 pm - 3:00 pm (EV charging)
-            (44, 2000),  # 3:00 pm - 3:15 pm (EV charging)
-            (45, 1800),  # 3:15 pm - 3:30 pm (EV charging)
-            (46, 1500),  # 3:30 pm - 3:45 pm (EV charging)
-            (47, 1200),  # 3:45 pm - 4:00 pm (EV charging)
-        ]
-
-        chargePowerLast = 10700
-        chargePowerMax = 2599
-        gridPowerLast = 1685
+        chargePowerLast = 2474
+        chargePowerMax = 3584
+        gridPowerLast = 348
         gridPowerMax = 12766
         homePowerLast = 0
         phasesActive = 1
-        pvPowerLast = 5964
-        pvPowerMax = 7577
+        pvPowerLast = 465
+        pvPowerMax = 4448
         vehicleSocLast = 77
 
     else:
@@ -273,12 +170,8 @@ def main(config):
         # setting the car icon accorind to the charging state, we have 8 different icons
         # based on the vehicleSocLast value
 
-    if phasesActive > 0:
-        CAR_ICON_DYNAMIC = CAR_CHARGING
-        print("charging detected")
-    else:
-        car_icon_index = int(math.round(vehicleSocLast / 12.5)) - 1  # 8 icons, 100/8=12.5, off by one
-        CAR_ICON_DYNAMIC = CAR_ICON[car_icon_index]
+    car_icon_index = int(math.round(vehicleSocLast / 12.5)) - 1  # 8 icons, 100/8=12.5, off by one
+    CAR_ICON_DYNAMIC = CAR_ICON[car_icon_index]
 
     ############################################################
     # the screen1 main columns
