@@ -204,9 +204,9 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(humanize(chargePowerLast), color = STEELBLUE, font = FONT),
+        render.Text(humanize(vehicleRangeLast), color = WHITE, font = FONT),
         render.Box(width = 1, height = 2, color = BLACK),
-        render.Text(str_vehicleSocLast, color = WHITE, font = FONT),
+        render.Text(str_vehicleSocLast, color = YELLOWGREEN, font = FONT),
     ]
 
     screen_1 = render.Row(
