@@ -81,9 +81,12 @@ SUN_ICON = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAASElEQVR4Aa1SQQoAIAgb0gf7/7GHGB08xdqKBBGc21AESOToybDAQ4SjfMQLWLXSEdwGrgms36SSELSd5IBNsK+nHKzdv7/RBFeDVlFpPWcXAAAAAElFTkSuQmCC
 """)
 
-
-
 ####
+
+CAR_CHARGING = base64.decode("""
+R0lGODlhDgAOAPEAAAAAAP///xXoEQAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQByAAAACwAAAAADgAOAAACIYSPecGtEFREU9IHjXu7+Q19Yjh52ncyqchGrUlKapw4BQAh+QQByAAAACwAAAAADgAOAAACJISPecGtEFREU9IHjXu7+Q19Yjh52ncyqchGrQkIsiILRk3PBQAh+QQByAAAACwAAAAADgAOAAACJoSPecGtEFREU9IHjXu7+Q19Yjh52ncyqcC2rgu8smC0ih2zt14AACH5BAHIAAAALAAAAAAOAA4AAAImhI95wa0QVERT0geNe7v5DX0iIJRGaZJoup7rCwtqjLpyUs9KXQAAIfkEAcgAAAAsAAAAAA4ADgAAAiSEj3nBrRBURFPSB417W/gPHuD4AaV5kkaIkq7XvsIKJ2mNlAUAIfkEAcgAAAAsAAAAAA4ADgAAAiSEj3nBrRBURFPSB43YeAvthRwoioBHfqe5juUbtrCKJnWNoAUAIfkEAcgAAAAsAAAAAA4ADgAAAiSEj3nBrRBUROKBerDCotvOgaJnjGYFluk1quQJe/G6Ui9pVwUAIfkEAcgAAAAsAAAAAA4ADgAAAiGEj3nCrSBURFPSB417u/kNfWI4edp3MqnIRq1JSmqcOAUAOw==
+""")
+
 PANEL_ICON = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAnmVYSWZNTQAqAAAACAAGARIAAwAAAAEAAQAAARoABQAAAAEAAABWARsABQAAAAEAAABeASgAAwAAAAEAAgAAATEAAgAAABoAAABmh2kABAAAAAEAAACAAAAAAAAAAEgAAAABAAAASAAAAAFQaXhlbG1hdG9yIFBybyBEZW1vIDIuMC42AAACoAIABAAAAAEAAAAOoAMABAAAAAEAAAAOAAAAAM2nMk0AAAAJcEhZcwAACxMAAAsTAQCanBgAAANsaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA2LjAuMCI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjE0PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjE0PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5QaXhlbG1hdG9yIFBybyBEZW1vIDIuMC42PC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMjQtMDItMTFUMTY6MDk6NThaPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyMDAwMC8xMDAwMDwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CpdATFoAAADSSURBVCgVxVAxEgFBENxVZHxAooiQE3jAlYBQxgXKHzzHN7zAFygXSXzgSE6wutVObVPy66q+6Z7dneob52pBCCEHDU+ItZmo2TPkDNmISZeS+Aw9Fj+CvohfUHt+MGqO0qEG7uAL7NEAN7AFdmmA0nt/5KOpZYh1j1pI7wrNnmLCqNlnTvoUkP1k3QCaPUXmMUZj8vAEzvTWn17JqJVk4PY24k1yyw8zqBWj8scN3OjQjNTfzeobuQaJqSvyu5tcM8mk8GALt2MHuo31H9JpXeoNjHW8AvqRh98AAAAASUVORK5CYII=
 """)
@@ -92,7 +95,7 @@ GRID_ICON = base64.decode("""
 iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAlmVYSWZNTQAqAAAACAAFARIAAwAAAAEAAQAAARoABQAAAAEAAABKARsABQAAAAEAAABSATEAAgAAABEAAABah2kABAAAAAEAAABsAAAAAAAAAEgAAAABAAAASAAAAAF3d3cuaW5rc2NhcGUub3JnAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAADqADAAQAAAABAAAADgAAAACSN6n1AAAACXBIWXMAAAsTAAALEwEAmpwYAAADBGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+d3d3Lmlua3NjYXBlLm9yZzwveG1wOkNyZWF0b3JUb29sPgogICAgICAgICA8ZXhpZjpQaXhlbFhEaW1lbnNpb24+MTY8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpDb2xvclNwYWNlPjE8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjE2PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzI8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyPC90aWZmOllSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4K455w4AAAATtJREFUKBVlkU1LAlEUhuemUEotw4VESJEV/pE+iFyVG/9PFEH9CrftQ/0NEoglROt2faEUTs97O2ea8oVn3jPna4Z7kzRNQ4LwGuxavCCXyMUY34GNn6w9SazBHYyhagMF4oLFVeIHeIRaHCMoQxdc57YvMwpnXsRvoaxfaVlyis9gAoc+RbxvOdXUI53q/9vWVMSnsAh1y8m2QTnV1CO19cWPuOP3MSTcgz70QF8cQV7vgbcDNqzADEowgC3ogHQCY2jABPSXrzAvlunALuECluY7kiTeoRdoKoYQvvAjcqug+jO5G695b+YU/KIrxPfg0v1V1IjHnmzIkvHEKF7ZhK5FSNf5nmyQgg8dE/tdfRILSd7MD///tE5LJyhpmd/biPhFSdefw1GSzcvYOmzqHWnREwf0Ft/s8Q36b0u+QFvvZAAAAABJRU5ErkJggg==
 """)
 
-CAR_ICON = [CAR0_ICON,CAR1_ICON,CAR2_ICON,CAR3_ICON,CAR4_ICON,CAR5_ICON,CAR6_ICON,CAR7_ICON]
+CAR_ICON = [CAR0_ICON, CAR1_ICON, CAR2_ICON, CAR3_ICON, CAR4_ICON, CAR5_ICON, CAR6_ICON, CAR7_ICON]
 
 # the main function
 def main(config):
@@ -113,65 +116,114 @@ def main(config):
         from(bucket:"' + bucket + '")'
 
     if api_key == "UNDEFINED":
-        chargePowerSeries = [
-            (0, 0.0),
-            (1, 1.0),
-            (2, 2.0),
-            (3, 3.0),
-            (4, 4.0),
-            (5, 5.0),
-            (6, 6.0),
-            (7, 7.0),
-            (8, 6.0),
-            (9, 5.0),
-            (10, 0.0),
-            (11, 0.0),
-            (12, 0.0),
-            (13, 0.0),
-            (14, 5.0),
-            (15, 7.0),
-            (16, 7.0),
-            (17, 11.0),
-            (18, 8.0),
-            (19, 4.0),
-            (20, 0.0),
-            (21, 0.0),
-            (22, 4.0),
-            (23, 0.0),
-            (24, 0.0),
-            (25, 0.0),
-            (26, 0.0),
-            (27, 0.0),
-            (28, 0.0),
-            (29, 0.0),
-            (30, 0.0),
-            (31, 0.0),
-            (32, 0.0),
-            (33, 0.0),
-            (34, 0.0),
-            (35, 0.0),
-            (36, 0.0),
-            (37, 0.0),
-            (38, 0.0),
-            (39, 0.0),
-            (40, 0.0),
-            (41, 0.0),
-            (42, 0.0),
-            (43, 0.0),
-            (44, 0.0),
-            (45, 0.0),
-            (46, 0.0),
-            (47, 0.0),
-            (48, 0.0),
+        gridPowerSeries = [
+            (0, 200),    # 4:00 am - 4:15 am
+            (1, 220),    # 4:15 am - 4:30 am
+            (2, 210),    # 4:30 am - 4:45 am
+            (3, 230),    # 4:45 am - 5:00 am
+            (4, 250),    # 5:00 am - 5:15 am
+            (5, 260),    # 5:15 am - 5:30 am
+            (6, 280),    # 5:30 am - 5:45 am
+            (7, 300),    # 5:45 am - 6:00 am
+            (8, 350),    # 6:00 am - 6:15 am
+            (9, 400),    # 6:15 am - 6:30 am
+            (10, 450),   # 6:30 am - 6:45 am
+            (11, 500),   # 6:45 am - 7:00 am
+            (12, 800),   # 7:00 am - 7:15 am (breakfast preparation)
+            (13, 1000),  # 7:15 am - 7:30 am (breakfast cooking)
+            (14, 1200),  # 7:30 am - 7:45 am (breakfast cooking)
+            (15, 1400),  # 7:45 am - 8:00 am (breakfast cooking)
+            (16, 1600),  # 8:00 am - 8:15 am
+            (17, 1800),  # 8:15 am - 8:30 am
+            (18, 2000),  # 8:30 am - 8:45 am
+            (19, 2200),  # 8:45 am - 9:00 am
+            (20, 1800),  # 9:00 am - 9:15 am
+            (21, 1600),  # 9:15 am - 9:30 am
+            (22, 1400),  # 9:30 am - 9:45 am
+            (23, 1200),  # 9:45 am - 10:00 am
+            (24, 1000),  # 10:00 am - 10:15 am
+            (25, 900),   # 10:15 am - 10:30 am
+            (26, 850),   # 10:30 am - 10:45 am
+            (27, 800),   # 10:45 am - 11:00 am
+            (28, 750),   # 11:00 am - 11:15 am
+            (29, 700),   # 11:15 am - 11:30 am
+            (30, 680),   # 11:30 am - 11:45 am
+            (31, 650),   # 11:45 am - 12:00 pm
+            (32, 2000),  # 12:00 pm - 12:15 pm (lunch preparation)
+            (33, 3000),  # 12:15 pm - 12:30 pm (lunch cooking)
+            (34, 2500),  # 12:30 pm - 12:45 pm (lunch cooking)
+            (35, 2000),  # 12:45 pm - 1:00 pm (lunch cooking)
+            (36, 1500),  # 1:00 pm - 1:15 pm
+            (37, 1200),  # 1:15 pm - 1:30 pm
+            (38, 1000),  # 1:30 pm - 1:45 pm
+            (39, 900),   # 1:45 pm - 2:00 pm
+            (40, 850),   # 2:00 pm - 2:15 pm
+            (41, 800),   # 2:15 pm - 2:30 pm
+            (42, 750),   # 2:30 pm - 2:45 pm
+            (43, 700),   # 2:45 pm - 3:00 pm
+            (44, 680),   # 3:00 pm - 3:15 pm
+            (45, 650),   # 3:15 pm - 3:30 pm
+            (46, 620),   # 3:30 pm - 3:45 pm
+            (47, 600),   # 3:45 pm - 4:00 pm
         ]
 
-        gridPowerSeries = chargePowerSeries
+        chargePowerSeries = [
+            (0, 0),      # 4:00 am - 4:15 am
+            (1, 0),      # 4:15 am - 4:30 am
+            (2, 0),      # 4:30 am - 4:45 am
+            (3, 0),      # 4:45 am - 5:00 am
+            (4, 0),      # 5:00 am - 5:15 am
+            (5, 0),      # 5:15 am - 5:30 am
+            (6, 0),      # 5:30 am - 5:45 am
+            (7, 0),      # 5:45 am - 6:00 am
+            (8, 0),      # 6:00 am - 6:15 am
+            (9, 0),      # 6:15 am - 6:30 am
+            (10, 0),     # 6:30 am - 6:45 am
+            (11, 0),     # 6:45 am - 7:00 am
+            (12, 0),     # 7:00 am - 7:15 am
+            (13, 0),     # 7:15 am - 7:30 am
+            (14, 0),     # 7:30 am - 7:45 am
+            (15, 0),     # 7:45 am - 8:00 am
+            (16, 0),     # 8:00 am - 8:15 am
+            (17, 0),     # 8:15 am - 8:30 am
+            (18, 0),     # 8:30 am - 8:45 am
+            (19, 0),     # 8:45 am - 9:00 am
+            (20, 0),     # 9:00 am - 9:15 am
+            (21, 0),     # 9:15 am - 9:30 am
+            (22, 0),     # 9:30 am - 9:45 am
+            (23, 0),     # 9:45 am - 10:00 am
+            (24, 0),     # 10:00 am - 10:15 am
+            (25, 0),     # 10:15 am - 10:30 am
+            (26, 0),     # 10:30 am - 10:45 am
+            (27, 0),     # 10:45 am - 11:00 am
+            (28, 0),     # 11:00 am - 11:15 am
+            (29, 0),     # 11:15 am - 11:30 am
+            (30, 0),     # 11:30 am - 11:45 am
+            (31, 0),     # 11:45 am - 12:00 pm
+            (32, 0),     # 12:00 pm - 12:15 pm (PV excess used for lunch preparation)
+            (33, 2000),  # 12:15 pm - 12:30 pm (PV excess used for lunch cooking)
+            (34, 1500),  # 12:30 pm - 12:45 pm (PV excess used for lunch cooking)
+            (35, 2000),  # 12:45 pm - 1:00 pm (PV excess used for lunch cooking)
+            (36, 3500),  # 1:00 pm - 1:15 pm (EV charging)
+            (37, 3600),  # 1:15 pm - 1:30 pm (EV charging)
+            (38, 3500),  # 1:30 pm - 1:45 pm (EV charging)
+            (39, 3300),  # 1:45 pm - 2:00 pm (EV charging)
+            (40, 3000),  # 2:00 pm - 2:15 pm (EV charging)
+            (41, 2700),  # 2:15 pm - 2:30 pm (EV charging)
+            (42, 2500),  # 2:30 pm - 2:45 pm (EV charging)
+            (43, 2300),  # 2:45 pm - 3:00 pm (EV charging)
+            (44, 2000),  # 3:00 pm - 3:15 pm (EV charging)
+            (45, 1800),  # 3:15 pm - 3:30 pm (EV charging)
+            (46, 1500),  # 3:30 pm - 3:45 pm (EV charging)
+            (47, 1200),  # 3:45 pm - 4:00 pm (EV charging)
+        ]
+
         chargePowerLast = 10700
         chargePowerMax = 2599
         gridPowerLast = 1685
         gridPowerMax = 12766
         homePowerLast = 0
-        phasesActive = 0
+        phasesActive = 1
         pvPowerLast = 5964
         pvPowerMax = 7577
         vehicleSocLast = 77
@@ -213,6 +265,21 @@ def main(config):
     if phasesActive >= 3:
         col3_phase3 = YELLOWGREEN
 
+    if vehicleSocLast == 0:
+        str_vehicleSocLast = "-"
+        car_icon_index = 0
+    else:
+        str_vehicleSocLast = str(vehicleSocLast) + "%"
+        # setting the car icon accorind to the charging state, we have 8 different icons
+        # based on the vehicleSocLast value
+
+    if phasesActive > 0:
+        CAR_ICON_DYNAMIC = CAR_CHARGING
+        print("charging detected")
+    else:
+        car_icon_index = int(math.round(vehicleSocLast / 12.5)) - 1  # 8 icons, 100/8=12.5, off by one
+        CAR_ICON_DYNAMIC = CAR_ICON[car_icon_index]
+
     ############################################################
     # the screen1 main columns
     ############################################################
@@ -233,19 +300,9 @@ def main(config):
         #render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
     ]
 
-    if vehicleSocLast == 0:
-        str_vehicleSocLast = "*"
-        car_icon_index = 0
-    else:
-        str_vehicleSocLast = str(vehicleSocLast) + "%"
-        # setting the car icon accorind to the charging state, we have 8 different icons
-        # based on the vehicleSocLast value
-
-        car_icon_index=int(math.round(vehicleSocLast/12.5)) - 1 # 8 icons, 100/8=12.5, off by one        
-        
     screen_1_3 = [
         # this is the car charging column
-        render.Image(src = CAR_ICON[car_icon_index]),
+        render.Image(src = CAR_ICON_DYNAMIC),
         render.Row(
             children = [
                 render.Box(width = 1, height = 1, color = col3_phase1),
