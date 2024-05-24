@@ -38,7 +38,7 @@ RED = "#F00"
 STEELBLUE = "39A2E4"
 SUNGLOW = "FFCA3A"
 WHITE = "#FFF"
-YELLOW = "#FF0"
+YELLOW = "FFD166"
 YELLOWGREEN = "AAE926"
 
 FONT = "tom-thumb"
@@ -118,12 +118,13 @@ def main(config):
         chargePowerLast = 2474
         chargePowerMax = 3584
         gridPowerLast = 348
-        gridPowerMax = 12766
+        gridPowerMax = 5322
         homePowerLast = 0
         phasesActive = 1
-        pvPowerLast = 465
+        pvPowerLast = 3465
         pvPowerMax = 4448
         vehicleSocLast = 77
+        vehicleRangeLast = 399
 
     else:
         # individual queries for the values
@@ -180,17 +181,15 @@ def main(config):
         # this is the PV power column
         render.Image(src = PANEL_ICON),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(humanize(pvPowerLast), color = YELLOWGREEN),
-        render.Box(width = 1, height = 2, color = BLACK),
-        #render.Text(str(pvPowerMax), color = YELLOW, font = FONT),
+        render.Text(humanize(pvPowerLast), color = YELLOWGREEN, font = FONT),
     ]
     screen_1_2 = [
         # this is the grid power column
         render.Image(src = col2_icon),
         render.Box(width = 2, height = 2, color = BLACK),  # for better horizontal alignment
-        render.Text(humanize(abs(gridPowerLast)), color = col2_color),  # abs() because I don't want to report negative numbers, thats why we have the color coding
+        render.Text(humanize(abs(gridPowerLast)), color = col2_color, font = FONT),  # abs() because I don't want to report negative numbers, thats why we have the color coding
         render.Box(width = 1, height = 2, color = BLACK),
-        #render.Text(str(gridPowerMax), color = YELLOW, font = FONT),
+        render.Text(str(chargePowerLast), color = STEELBLUE, font = FONT),
     ]
 
     screen_1_3 = [
@@ -206,7 +205,7 @@ def main(config):
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
         render.Text(humanize(vehicleRangeLast), color = WHITE, font = FONT),
         render.Box(width = 1, height = 2, color = BLACK),
-        render.Text(str_vehicleSocLast, color = YELLOWGREEN, font = FONT),
+        render.Text(str_vehicleSocLast, color = WHITE, font = FONT),
     ]
 
     screen_1 = render.Row(
