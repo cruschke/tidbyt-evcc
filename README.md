@@ -9,27 +9,24 @@ The first screen is separated into 3 columns.
 
 |column|description|
 | -------- | ------- |
-|  1  |  current photovoltaic output|
-| 2  |  ☀️ or ☢️ , depending on what is winning |
-|   |   current grid power  |
-|  | current charge power | 
-| 3 | green dots indicating current phases  |
-|  |  vehicle range | 
-|  | vehicle state of charge | 
+| 1|current photovoltaic output|
+|2|☀️ or ☢️ , depending on what is winning |
+||current grid power  |
+||current charge power | 
+|3|green dots indicating current phases  |
+||vehicle range | 
+||vehicle state of charge | 
 
-The second screen is separated into 2 rows.
+The second screen is separated into 2 rows. Graphs are cached for 15 minutes.
 
 |row|description|
 | -------- | ------- |
-| 1 | maximum photovoltaic watts today|
-|  |  maximum grid power today| 
-| 2 |  chargePowerMax |
+|1|maximum photovoltaic output today|
+| | maximum grid power today| 
+|2|chargePowerMax |
 
 > [!IMPORTANT]
-> graphs are cached for 15 mins
-
-> [!IMPORTANT]
-> By default when the car is not connected to a charger, the SOC is not updated. Check evcc [loadpoint](https://docs.evcc.io/en/docs/reference/configuration/loadpoints#soc) documentation how to change this behaviour.
+> By default, when the car is not connected to a charger, the SOC is not updated. Check evcc [loadpoint](https://docs.evcc.io/en/docs/reference/configuration/loadpoints#soc) documentation how to change this behaviour.
 
 
 # Setup
