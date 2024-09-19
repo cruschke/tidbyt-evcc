@@ -26,14 +26,14 @@ The second screen is separated into 2 rows. Graphs are cached for 15 minutes.
 |2|chargePowerMax |
 
 > [!IMPORTANT]
-> By default, when the car is not connected to a charger, the SOC is not updated. Check evcc [loadpoint](https://docs.evcc.io/en/docs/reference/configuration/loadpoints#soc) documentation how to change this behaviour.
+> By default, when the car is not connected to a charger, SOC and range are not updated. Check evcc [loadpoint](https://docs.evcc.io/en/docs/reference/configuration/loadpoints#soc) documentation how to change this behaviour.
 
 
 # Setup
 
 ## Signup to InfluxDB Cloud Serverless
 
-Tidbyt apps are designed to query data only from public API endpoints, not from any local LAN device. However for security reasons exposing the evcc API endpoint to the public internet using DynDNS or so is not ideal too.
+Tidbyt apps are designed to query data only from public API endpoints, not from any local LAN device. evcc typically runs in your LAN on a Raspberry Pi or similar. However for security reasons exposing the evcc API endpoint to the public internet using DynDNS or so is not ideal too.
 
 The approach is to use a [InfluxDB Cloud Serverless](https://www.influxdata.com/influxdb-cloud-pricing/) with a "Free Plan", allowing to keep 30 days of data and sufficient API requests for reading and writing data.
 
@@ -67,17 +67,9 @@ Use the InfluxDB "Data Explorer" to verify evcc is able to send metrics.
 
 You should see some query results matching the statistics of your evcc installation.
 
-# Using the app
-
-* three-columns screen
-  * single values -  the last known value 
-* graphs screen
-  * single values-  the max value in the last 12 hours
-  * graphing the last 12 hours mean value over an aggregate window of 15 minutes
 
 ## InfluxDB measurements taken into consideration
 
-TODO: check if all are used
 
 |metric|description|
 | -------- | ------- |
@@ -90,16 +82,6 @@ TODO: check if all are used
 
 For more details on measurements check out the [evcc  messaging](https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md) documentation.
 
-# open issues
-* make up my mind if gridPower or homePower should be plotted
-* error handling (like wrong API key) is very basic
-* improving the icons
-  * animated car when the car is charging  
-  * the second column icon depends on whether I produce more solar energy or if I take it from grid, need to make up my mind what icons to present
-  * better icons in general
- * the elephant in the room: publishing the app to the [community apps](https://tidbyt.dev/docs/publish/community-apps) store
-
-
 # Credits
 
-Icons from [FLATICON](https://www.flaticon.com/)
+Icons created by my colleague Alvaro, who is abstinent from social media, hence no link here.
