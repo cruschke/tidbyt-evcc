@@ -1,13 +1,36 @@
 # tidbyt-evcc
 [evcc](https://evcc.io/en/) is a popular open source project, allowing you to charge your BEV using as much self-generated power as possible. The project loves 💚 good UIs, a [Tidbyt](https://tidbyt.com/products/tidbyt) app displaying the most important statistics (excess solar power, charging power, state of charge) makes totally sense that's why 😀.
 
-# App design considerations
+# Overview
 
-* MUST be installable from official Tidbyt app store
-* MUST not create additional security risks by having to expose the evcc API endpoint to the public internet
-* MUST be configurable by a regular evcc user, no coding skills required
-* MUST support free InfluxDB plans
-* MUST not exceed API rate limits exposed by free InfluxDB plans by leverating caching
+![Screenshot of a evcc app](evcc.gif)
+
+The first screen is separated into 3 columns.
+
+|column|description|
+| -------- | ------- |
+|  1  |  current photovoltaic output|
+| 2  |  ☀️ or ☢️ , depending on what is winning |
+|   |   current grid power  |
+|  | current charge power | 
+| 3 | green dots indicating current phases  |
+|  |  vehicle range | 
+|  | vehicle state of charge | 
+
+The second screen is separated into 2 rows.
+
+|row|description|
+| -------- | ------- |
+| 1 | maximum photovoltaic watts today|
+|  |  maximum grid power today| 
+| 2 |  chargePowerMax |
+
+> [!IMPORTANT]
+> graphs are cached for 15 mins
+
+> [!IMPORTANT]
+> By default when the car is not connected to a charger, the SOC is not updated. Check evcc [loadpoint](https://docs.evcc.io/en/docs/reference/configuration/loadpoints#soc) documentation how to change this behaviour.
+
 
 # Setup
 
