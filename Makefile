@@ -15,7 +15,7 @@ push:
 	pixlet push $(DEVICEID) evcc.webp
 
 serve:
-	pixlet serve -w evcc.star
+	pixlet serve evcc.star
 
 clean:
 	rm -f evcc.webp
