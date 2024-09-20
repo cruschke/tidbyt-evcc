@@ -7,27 +7,28 @@
 
 The first screen is separated into 3 columns.
 
-|column|description|
-| -------- | ------- |
-| 1|current photovoltaic output|
-|2|☀️ or ☢️ , depending on what is winning |
-||current grid power  |
-||current charge power | 
-|3|green dots indicating current phases  |
-||vehicle range | 
-||vehicle state of charge | 
+|column|description|evcc metric name| 
+| -------- | ------- |------- |
+| 1|current photovoltaic output| pvPower  |
+|2|☀️ or ☢️ , depending on what is winning |  |
+||current grid power, green when more pvPower is generated than used, red otherwise | gridPower | 
+||current charge power | chargePower | 
+|3|🟢⚫️⚫️ indicating active phases  |phasesActive | 
+||vehicle range |vehicleRangeLast | 
+||vehicle state of charge | vehicleSoc | 
 
-The second screen is separated into 2 rows. Graphs are cached for 15 minutes.
+The second screen is separated into 2 rows. Graphs are showing the last 12 hours, values are cached for 15 minutes.
 
-|row|description|
-| -------- | ------- |
-|1|maximum photovoltaic output today|
-| | maximum grid power today| 
-|2|chargePowerMax |
+|row|description|evcc metric name| 
+| -------- | ------- |------- |
+|1|maximum photovoltaic output today| pvPower |
+| | maximum grid power today|gridPower |
+|2|chargePowerMax |chargePower |
 
 > [!IMPORTANT]
 > By default, when the car is not connected to a charger, SOC and range are not updated. Check evcc [loadpoint](https://docs.evcc.io/en/docs/reference/configuration/loadpoints#soc) documentation how to change this behaviour.
 
+For more details on measurements check out the [evcc  messaging](https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md) documentation.
 
 # Setup
 
@@ -62,26 +63,11 @@ Restart your evcc and check the logs for errors.
 Use the InfluxDB "Data Explorer" to verify evcc is able to send metrics.
 
 * select the bucket `evcc`
-* pick measurement `gridPower` 
+* pick measurement `gridPower` or any other
 * run the query
 
 You should see some query results matching the statistics of your evcc installation.
 
-
-## InfluxDB measurements taken into consideration
-
-
-|metric|description|
-| -------- | ------- |
-|gridPower|Current grid feed-in (green) or consumption (red)|
-|chargePower|Current charging power|
-|homePower|Current house consumption power (without wallbox consumption)|
-|phasesActive|Currently active number of current phases of the charging point|
-|pvPower|Current solar system output|
-|vehicleSoc|Current vehicle state of charge (Soc) in percent|
-
-For more details on measurements check out the [evcc  messaging](https://github.com/evcc-io/docs/blob/main/docs/reference/configuration/messaging.md) documentation.
-
 # Credits
 
-Icons created by my colleague Alvaro, who is abstinent from social media, hence no link here.
+Icons were created by my colleague Alvaro, who is abstinent from social media, hence no link here.

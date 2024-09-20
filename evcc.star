@@ -138,7 +138,7 @@ def main(config):
     # the main display
 
     # color coding for the columns
-    if pvPowerLast > homePowerLast:
+    if pvPowerLast > gridPowerLast: # TODO or homePowerLast?
         col2_icon = SUN_ICON
         col2_color = YELLOWGREEN
     else:
@@ -406,9 +406,8 @@ def getLastValue(measurement, dbhost, defaults, api_key):
     print("%sLast = %s" % (measurement, value))
     return int(value)
 
-# TODO revert back to 1min
-# TODO make vehicle a parameter
-# TODO make loadpoint a parameter
+# By default, when the car is not connected to a charger, SOC and range are not updated. Hence looking back a little longer
+# Check evcc loadpoint documentation how to change this behaviour.
 def getLastValueCar(measurement, vehicle, dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: -12h) \
