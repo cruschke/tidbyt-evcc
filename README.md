@@ -11,11 +11,11 @@ The first screen is separated into 3 columns.
 | -------- | ------- |------- |
 | 1|current photovoltaic output| pvPower  |
 |2|☀️ or ☢️ , depending on what is winning |  |
-||current grid power, green when more pvPower is generated than used, red otherwise | gridPower | 
+||current grid power, green when more pvPower is generated than used, red otherwise |gridPower | 
 ||current charge power | chargePower | 
 |3|the car is a progress bar  |vehicleSoc | 
-||🟢⚫️⚫️ indicating active phases  |phasesActive | 
-||vehicle range |vehicleRangeLast | 
+||🟢⚫️⚫️ indicating active charging phases  |phasesActive | 
+||vehicle range |vehicleRange | 
 ||vehicle state of charge | vehicleSoc | 
 
 The second screen is separated into 2 rows. Graphs are showing the last 12 hours, values are cached for 15 minutes.
