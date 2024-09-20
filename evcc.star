@@ -1,7 +1,7 @@
 """
-Applet: evcc.io
-Summary: shows evcc solar charging status
-Description: Requires a public accessible InfluxDB, currently tested only with InfluxDB Cloud 2.0 free plan. 
+Applet: EVCC
+Summary: EVCC metrics for your EV
+Description: EVCC is an energy management system with a focus on electromobility. This app to display the most essential data.
 Author: cruschke
 """
 
