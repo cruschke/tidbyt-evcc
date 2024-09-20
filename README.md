@@ -13,7 +13,8 @@ The first screen is separated into 3 columns.
 |2|☀️ or ☢️ , depending on what is winning |  |
 ||current grid power, green when more pvPower is generated than used, red otherwise | gridPower | 
 ||current charge power | chargePower | 
-|3|🟢⚫️⚫️ indicating active phases  |phasesActive | 
+|3|the car is a progress bar  |vehicleSoc | 
+||🟢⚫️⚫️ indicating active phases  |phasesActive | 
 ||vehicle range |vehicleRangeLast | 
 ||vehicle state of charge | vehicleSoc | 
 
