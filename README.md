@@ -1,5 +1,5 @@
-# tidbyt-evcc
-[evcc](https://evcc.io/en/) is a popular open source project, allowing you to charge your BEV using as much self-generated power as possible. The project loves 💚 good UIs, a [Tidbyt](https://tidbyt.com/products/tidbyt) app displaying the most important statistics (excess solar power, charging power, state of charge) makes totally sense that's why 😀.
+# EVCC
+[evcc](https://evcc.io/en/) is an energy management system with a focus on electromobility. The software controls your EV charger or smart plug. It communicates with your vehicle, inverter or home storage to make intelligent charging decisions. This app is to display the most important statistics (excess solar power, charging power, state of charge).
 
 # Overview
 
@@ -10,7 +10,7 @@ The first screen is separated into 3 columns.
 |column|description|evcc metric name| 
 | -------- | ------- |------- |
 | 1|current photovoltaic output| pvPower  |
-|2|☀️ or ☢️ , depending on what is winning |  |
+|2|☀️ or ☢️ , depending on what is winning |gridPower |
 ||current grid power, green when more pvPower is generated than used, red otherwise |gridPower | 
 ||current charge power | chargePower | 
 |3|the car is a progress bar  |vehicleSoc | 
@@ -18,15 +18,13 @@ The first screen is separated into 3 columns.
 ||vehicle range |vehicleRange | 
 ||vehicle state of charge | vehicleSoc | 
 
-The second screen is separated into 2 rows. Graphs are showing the last 12 hours, values are cached for 15 minutes.
+The second screen is separated into 2 rows. Graphs are showing the last 12 hours and cached for 15 minutes. Metrics are showing average values aggregated over 15 minutes.
 
 |row|description|evcc metric name| 
 | -------- | ------- |------- |
 |1|maximum photovoltaic output today| pvPower |
 | | maximum grid power today|gridPower |
 |2|chargePowerMax |chargePower |
-
-The graphs are displaying the last 12 hour, averaged over 15min.
 
 > [!IMPORTANT]
 > By default, when the car is not connected to a charger, SOC and range are not updated. Check evcc [loadpoint](https://docs.evcc.io/en/docs/reference/configuration/loadpoints#soc) documentation how to change this behaviour.
