@@ -543,7 +543,7 @@ def get_schema():
             schema.Dropdown(
                 id = "influxdb",
                 name = "InfluxDB region",
-                desc = "InfluxDB Cloud region",
+                desc = "the region you picked for your InfluxDB setup",
                 icon = "cloud",
                 default = options_influxdb[0].value,
                 options = options_influxdb,

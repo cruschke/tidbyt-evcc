@@ -26,6 +26,8 @@ The second screen is separated into 2 rows. Graphs are showing the last 12 hours
 | | maximum grid power today|gridPower |
 |2|chargePowerMax |chargePower |
 
+The graphs are displaying the last 12 hour, averaged over 15min.
+
 > [!IMPORTANT]
 > By default, when the car is not connected to a charger, SOC and range are not updated. Check evcc [loadpoint](https://docs.evcc.io/en/docs/reference/configuration/loadpoints#soc) documentation how to change this behaviour.
 
@@ -68,6 +70,14 @@ Use the InfluxDB "Data Explorer" to verify evcc is able to send metrics.
 * run the query
 
 You should see some query results matching the statistics of your evcc installation.
+
+# Tidbyt App configuration
+
+* pick the region you used for InfluxDB 
+* enter the InfluxDB read API key
+* change InfluxDB bucket name when needed
+* enter the name of your vehicle as it is displayed in evcc (some metrics won't work otherwise)
+* the location needs to match your InfluxDB timezone (relevant for the graphs)
 
 # Credits
 
