@@ -10,6 +10,7 @@ lint:
 	# pixlet check -r . # FIXEME: manifest is needed
 
 render:
+	pixlet render evcc.star --gif --magnify 10
 	pixlet render evcc.star
 push:
 	pixlet push $(DEVICEID) evcc.webp

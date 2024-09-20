@@ -10,7 +10,6 @@ load("encoding/base64.star", "base64")
 load("encoding/csv.star", "csv")
 load("encoding/json.star", "json")
 load("http.star", "http")
-load("math.star", "math")
 load("render.star", "render")
 load("schema.star", "schema")
 
@@ -111,12 +110,13 @@ def main(config):
         chargePowerMax = 3584
         gridPowerLast = 348
         gridPowerMax = 2644
-        homePowerLast = 100
+
+        #homePowerLast = 100
         phasesActive = 1
         pvPowerLast = 2654
         pvPowerMax = 5378
-        vehicleSocLast = 73
-        vehicleRangeLast = 399
+        vehicleSocLast = 79
+        vehicleRangeLast = 428
 
     else:
         # individual queries for the values
@@ -124,7 +124,8 @@ def main(config):
         chargePowerMax = getMaxValue("chargePower", influxdb_host, flux_defaults, api_key)
         gridPowerLast = getLastValue("gridPower", influxdb_host, flux_defaults, api_key)
         gridPowerMax = getMaxValue("gridPower", influxdb_host, flux_defaults, api_key)
-        homePowerLast = getLastValue("homePower", influxdb_host, flux_defaults, api_key)
+
+        #homePowerLast = getLastValue("homePower", influxdb_host, flux_defaults, api_key)
         phasesActive = getLastValue("phasesActive", influxdb_host, flux_defaults, api_key)
         pvPowerLast = getLastValue("pvPower", influxdb_host, flux_defaults, api_key)
         pvPowerMax = getMaxValue("pvPower", influxdb_host, flux_defaults, api_key)
@@ -138,7 +139,7 @@ def main(config):
     # the main display
 
     # color coding for the columns
-    if pvPowerLast > gridPowerLast: # TODO or homePowerLast?
+    if pvPowerLast > gridPowerLast:  # TODO or homePowerLast?
         col2_icon = SUN_ICON
         col2_color = YELLOWGREEN
     else:
@@ -155,16 +156,36 @@ def main(config):
     if phasesActive >= 3:
         col3_phase3 = YELLOWGREEN
 
+    # for the case Soc and range are not available
     if vehicleSocLast == 0:
-        str_vehicleSocLast = "-"
-        car_icon_index = 0
+        str_vehicleSocLast = "?"
+        CAR_ICON_DYNAMIC = CAR_ICON[0]
     else:
         str_vehicleSocLast = str(vehicleSocLast) + "%"
-        # setting the car icon accorind to the charging state, we have 8 different icons
-        # based on the vehicleSocLast value
 
-    car_icon_index = int(math.round(vehicleSocLast / 12.5)) - 1  # 8 icons, 100/8=12.5, off by one
-    CAR_ICON_DYNAMIC = CAR_ICON[car_icon_index]
+    if vehicleRangeLast == 0:
+        str_vehicleRangeLast = "?"
+    else:
+        str_vehicleRangeLast = str(vehicleRangeLast) + "%"
+
+    # calculating the car progress bar
+    # based on the vehicleSocLast value
+    if vehicleSocLast >= 87:
+        CAR_ICON_DYNAMIC = CAR_ICON[7]
+    elif vehicleSocLast >= 75:
+        CAR_ICON_DYNAMIC = CAR_ICON[6]
+    elif vehicleSocLast >= 62:
+        CAR_ICON_DYNAMIC = CAR_ICON[5]
+    elif vehicleSocLast >= 50:
+        CAR_ICON_DYNAMIC = CAR_ICON[4]
+    elif vehicleSocLast >= 37:
+        CAR_ICON_DYNAMIC = CAR_ICON[3]
+    elif vehicleSocLast >= 25:
+        CAR_ICON_DYNAMIC = CAR_ICON[2]
+    elif vehicleSocLast >= 12:
+        CAR_ICON_DYNAMIC = CAR_ICON[1]
+    else:
+        CAR_ICON_DYNAMIC = CAR_ICON[0]
 
     ############################################################
     # the screen1 main columns
@@ -195,7 +216,7 @@ def main(config):
             ],
         ),
         render.Box(width = 2, height = 1, color = BLACK),  # for better horizontal alignment
-        render.Text(humanize(vehicleRangeLast), color = WHITE, font = FONT),
+        render.Text(str_vehicleRangeLast, color = WHITE, font = FONT),
         render.Box(width = 1, height = 2, color = BLACK),
         render.Text(str_vehicleSocLast, color = WHITE, font = FONT),
     ]
