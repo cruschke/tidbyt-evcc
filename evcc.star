@@ -166,7 +166,7 @@ def main(config):
     if vehicleRangeLast == 0:
         str_vehicleRangeLast = "?"
     else:
-        str_vehicleRangeLast = str(vehicleRangeLast) + "%"
+        str_vehicleRangeLast = str(vehicleRangeLast)
 
     # calculating the car progress bar
     # based on the vehicleSocLast value
