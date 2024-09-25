@@ -3,7 +3,7 @@
 
 # Overview
 
-![Screenshot of a evcc app](evcc.gif)
+![Screenshot of a evcc app screen 1](evcc1.png)
 
 The first screen is separated into 3 columns.
 
@@ -17,6 +17,8 @@ The first screen is separated into 3 columns.
 ||🟢⚫️⚫️ indicating active charging phases  |phasesActive | 
 ||vehicle range |vehicleRange | 
 ||vehicle state of charge | vehicleSoc | 
+
+![Screenshot of a evcc app screen 2](evcc2.png)
 
 The second screen is separated into 2 rows. Graphs are showing the last 12 hours and cached for 15 minutes. Metrics are showing average values aggregated over 15 minutes.
 
