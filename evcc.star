@@ -23,8 +23,8 @@ DEFAULT_TIMEZONE = "Europe/Berlin"
 
 INFLUXDB_HOST_DEFAULT = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/query"
 
-TTL_FOR_LAST = 60  # the TTL for up2date info
-TTL_FOR_MAX = 60  # how often the max values are being refreshed
+TTL_FOR_LAST = 300  # the TTL for up2date info
+TTL_FOR_MAX = 300  # how often the max values are being refreshed
 TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are being refreshed
 
 # COLOR DEFINITIONS
@@ -404,6 +404,7 @@ def getMaxValue(measurement, dbhost, defaults, api_key):
         |> range(start: today()) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
         |> group() \
+        |> aggregateWindow(every: 15m, fn: mean)          \
         |> max() \
         |> toInt() \
         |> keep(columns: ["_value"])'
@@ -415,10 +416,10 @@ def getMaxValue(measurement, dbhost, defaults, api_key):
 
 def getLastValue(measurement, dbhost, defaults, api_key):
     fluxql = defaults + ' \
-        |> range(start: -1m) \
+        |> range(start: -5m) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
         |> group() \
-        |> last() \
+        |> aggregateWindow(every: 5m, fn: mean)                    \
         |> toInt() \
         |> keep(columns: ["_value"])'
 
