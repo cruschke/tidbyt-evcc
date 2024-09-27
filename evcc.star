@@ -399,13 +399,13 @@ def getgridPowerSeries(dbhost, defaults, api_key):
     #print ("query=" + fluxql)
     return getTouples(dbhost, fluxql, api_key, TTL_FOR_SERIES)
 
-# average over 15 min, cached for 15 min
+# average over 5 min, cached for 15 min
 def getMaxValue(measurement, dbhost, defaults, api_key):
     fluxql = defaults + ' \
         |> range(start: today()) \
         |> filter(fn: (r) => r._measurement == "' + measurement + '") \
         |> group() \
-        |> aggregateWindow(every: 15m, fn: mean)          \
+        |> aggregateWindow(every: 5m, fn: mean)          \
         |> max() \
         |> toInt() \
         |> keep(columns: ["_value"])'

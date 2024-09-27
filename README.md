@@ -20,7 +20,7 @@ The first screen is separated into 3 columns. "current" values are averaged over
 
 ![Screenshot of a evcc app screen 2](evcc2.png)
 
-The second screen is separated into 2 rows. Graphs are showing the last 12 hours, values are a moving average over 15 minutes and cached for 15 minutes. For "max" metrics an moving average is calculated over 15 minutes, the maximum of today is taken, cached for 5 minutes.
+The second screen is separated into 2 rows. Graphs are showing the last 12 hours, values are a moving average over 15 minutes and cached for 15 minutes. For "max" metrics an moving average is calculated over 5 minutes, the maximum of today is taken, cached for 5 minutes.
 
 |row|description|evcc metric name| 
 | -------- | ------- |------- |
