@@ -32,13 +32,16 @@ TTL_FOR_SERIES = 900  # how often the time series for pvPower and homePower are 
 BLACK = "#000"
 DARK_GREEN = "#062E03"
 FIREBRICK = "E1121F"
+FIREBRICK_DARK = "#380508"
 GREY = "#1A1A1A"
 RED = "#F00"
 STEELBLUE = "39A2E4"
+STEELBLUE_DARK = "#092a3f"
 SUNGLOW = "FFCA3A"
 WHITE = "#FFF"
 YELLOW = "FFD166"
 YELLOWGREEN = "AAE926"
+YELLOWGREEN_DARK = "#2c3d06"
 
 FONT = "tom-thumb"
 
@@ -143,7 +146,7 @@ def main(config):
         col2_icon = SUN_ICON
         col2_color = YELLOWGREEN
     else:
-        col2_icon = NUCLEAR_SOLID_ICON
+        col2_icon = NUCLEAR_OUTLINE_ICON
         col2_color = FIREBRICK
 
     col3_phase1 = DARK_GREEN
@@ -274,6 +277,9 @@ def main(config):
                 height = 16,
                 color = YELLOWGREEN,
                 color_inverted = FIREBRICK,
+                fill_color = YELLOWGREEN_DARK,
+                fill_color_inverted = FIREBRICK_DARK,
+                fill = True,
             ),
             width = 45,
             height = 16,
@@ -288,6 +294,8 @@ def main(config):
                 width = 47,
                 height = 15,
                 color = STEELBLUE,
+                fill_color_inverted = STEELBLUE_DARK,
+                fill = True,
             ),
             width = 45,
             height = 15,
